@@ -1,6 +1,6 @@
 <?php
 
-namespace Liuggio\StatsdClient\Model;
+namespace Liuggio\StatsdClient\Entity;
 
 interface StatsdDataInterface
 {
@@ -23,7 +23,7 @@ interface StatsdDataInterface
 
     /**
      * @abstract
-     * @return mixed
+     * @return string
      */
     function getMetric();
 

@@ -2,13 +2,13 @@
 
 namespace Liuggio\StatsdClient;
 
-use Liuggio\StatsdClient\Model\StatsdDataInterface;
+use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 
 
 class StatsdDataFactory
 {
     /**
-     * @var \Liuggio\StatsdClient\Model\StatsdDataInterface
+     * @var \Liuggio\StatsdClient\Entity\StatsdDataInterface
      */
     private $entityClass;
 
@@ -18,28 +18,29 @@ class StatsdDataFactory
     }
 
     /**
-     * Sets one or more timing values
+     * This function creates a 'timing' StatsdData
      *
      * @param string|array $stats The metric(s) to set.
      * @param float $time The elapsed time (ms) to log
      **/
-    public function timing($stats, $time)
+    public function timing($key, $time)
     {
-        return $this->produceStatsdData($stats, $time, StatsdDataInterface::STATSD_METRIC_TIMING);
+        return $this->produceStatsdData($key, $time, StatsdDataInterface::STATSD_METRIC_TIMING);
     }
 
     /**
-     * Sets one or more gauges to a value
+     * This function creates a 'gauge' StatsdData
      *
      * @param string|array $stats The metric(s) to set.
      * @param float $value The value for the stats.
      **/
-    public function gauge($stats, $value)
+    public function gauge($key, $value)
     {
-        return $this->produceStatsdData($stats, $value, StatsdDataInterface::STATSD_METRIC_GAUGE);
+        return $this->produceStatsdData($key, $value, StatsdDataInterface::STATSD_METRIC_GAUGE);
     }
 
     /**
+     * This function creates a 'set' StatsdData object
      * A "Set" is a count of unique events.
      * This data type acts like a counter, but supports counting
      * of unique occurences of values between flushes. The backend
@@ -54,65 +55,69 @@ class StatsdDataFactory
      * @param float $value The value for the stats.
      * @return array
      **/
-    public function set($stats, $value)
+    public function set($key, $value)
     {
-        return $this->produceStatsdData($stats, $value, StatsdDataInterface::STATSD_METRIC_SET);
+        return $this->produceStatsdData($key, $value, StatsdDataInterface::STATSD_METRIC_SET);
     }
 
     /**
-     * Increments one or more stats counters
+     * This function creates a 'increment' StatsdData object
      *
-     * @param string|array $stats The metric(s) to increment.
+     * @param string|array $key The metric(s) to increment.
      * @param float|1 $sampleRate the rate (0-1) for sampling.
      * @return array
      **/
-    public function increment($stats)
+    public function increment($key)
     {
-        return $this->produceStatsdData($stats, 1, StatsdDataInterface::STATSD_METRIC_COUNT);
+        return $this->produceStatsdData($key, 1, StatsdDataInterface::STATSD_METRIC_COUNT);
     }
 
     /**
-     * Decrements one or more stats counters.
+     * This function creates a 'decrement' StatsdData object.
      *
-     * @param string|array $stats The metric(s) to decrement.
+     * @param string|array $key The metric(s) to decrement.
      * @param float|1 $sampleRate the rate (0-1) for sampling.
      * @return mixed
      **/
-    public function decrement($stats)
+    public function decrement($key)
     {
-        return $this->produceStatsdData($stats, -1, StatsdDataInterface::STATSD_METRIC_COUNT);
+        return $this->produceStatsdData($key, -1, StatsdDataInterface::STATSD_METRIC_COUNT);
     }
 
     /**
-     * Updates one or more stats.
+     * Procude a StatsdDataInterface Object
      *
-     * @param string $key The metric to . Should be either a string or array of metrics.
+     * @param string $key The key of the metric
      * @param int|1 $value The amount to increment/decrement each metric by.
      * @param string|c $metric The metric type ("c" for count, "ms" for timing, "g" for gauge, "s" for set)
      * @return StatsdDataInterface
      **/
     public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
     {
-        $StatsdData = $this->produceStatsdDataEntity();
+        $statsdData = $this->produceStatsdDataEntity();
 
         if (null !== $key) {
-            $StatsdData->setKey($key);
+            $statsdData->setKey($key);
         }
 
         if (null !== $value) {
-            $StatsdData->setValue($value);
+            $statsdData->setValue($value);
         }
 
         if (null !== $metric) {
-            $StatsdData->setMetric($metric);
+            $statsdData->setMetric($metric);
         }
 
-        return $StatsdData;
+        return $statsdData;
     }
 
+    /**
+     * standard factory method for the StatsdDataInterface object
+     * @return mixed
+     */
     public function produceStatsdDataEntity() {
-        $StatsdData = $this->getEntityClass();
-        return new $StatsdData();
+        $statsdData = $this->getEntityClass();
+        return new $statsdData();
     }
 
     /**
@@ -132,7 +137,7 @@ class StatsdDataFactory
     }
 
     /**
-     * @param \Liuggio\StatsdClient\Model\StatsdDataInterface $entityClass
+     * @param \Liuggio\StatsdClient\Entity\StatsdDataInterface $entityClass
      */
     public function setEntityClass($entityClass)
     {
@@ -140,7 +145,7 @@ class StatsdDataFactory
     }
 
     /**
-     * @return \Liuggio\StatsdClient\Model\StatsdDataInterface
+     * @return \Liuggio\StatsdClient\Entity\StatsdDataInterface
      */
     public function getEntityClass()
     {

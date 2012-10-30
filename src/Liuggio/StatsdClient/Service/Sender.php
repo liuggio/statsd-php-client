@@ -5,13 +5,7 @@ namespace Liuggio\StatsdClient\Service;
 Class Sender implements SenderInterface
 {
     /**
-     * @static
-     * @param $host
-     * @param $port
-     * @param null $errno
-     * @param null $errstr
-     * @param null $timeout
-     * @return resource
+     * @inherit
      */
     public function open($hostname, $port = null, &$errno = null, &$errstr = null, $timeout = null) {
         $fp = fsockopen($hostname, $port, $errno, $errstr, $timeout);
@@ -19,16 +13,14 @@ Class Sender implements SenderInterface
     }
 
     /**
-     * @param $handle
-     * @param $message
-     * @return int
+     * @inherit
      */
     function write($handle, $message, $length = null){
         return fwrite($handle, $message, $length);
     }
 
     /**
-     * @param $handle
+     * @inherit
      */
     function close($handle){
         fclose($handle);

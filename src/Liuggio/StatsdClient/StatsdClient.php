@@ -3,7 +3,7 @@
 namespace Liuggio\StatsdClient;
 
 use Liuggio\StatsdClient\Service\SenderInterface;
-use Liuggio\StatsdClient\Model\StatsdDataInterface;
+use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 use Liuggio\StatsdClient\Exception\InvalidArgumentException;
 
 class StatsdClient
@@ -36,26 +36,47 @@ class StatsdClient
     private $sender;
 
     /**
+     * @var boolean
+     */
+    private $reducePacket;
+
+    /**
      * @param $host
      * @param $port
      * @param $protocol
      * @param Service\SenderInterface $sender
      * @param bool $fail_silently
      */
-    public function __construct($host, $port, $protocol, SenderInterface $sender, $fail_silently = true)
+    public function __construct($host, $port, $protocol, SenderInterface $sender, $reducePacket = false, $fail_silently = true)
     {
         $this->host = $host;
         $this->port = $port;
         $this->sender = $sender;
+        $this->reducePacket = $reducePacket;
         $this->failSilently = $fail_silently;
     }
 
+    /**
+     * Throws an exc only if failSilently if  getFailSilently is false
+     * @param \Exception $exception
+     * @throws \Exception
+     */
     private function throwException(\Exception $exception) {
             if (!$this->getFailSilently()) {
                 throw $exception;
             }
     }
 
+    /**
+     * This function reduces the number of packets,the reduced has the maximum dimension of self::MAX_UDP_SIZE_STR
+     * Reference:
+     * https://github.com/etsy/statsd/blob/master/README.md
+     * All metrics can also be batch send in a single UDP packet, separated by a newline character.
+     *
+     * @param $result
+     * @param $item
+     * @return array
+     */
     function doReduce($result, $item)
     {
         $oldLastItem = array_pop($result);
@@ -80,8 +101,10 @@ class StatsdClient
     }
 
     /**
-     * this function reduce the amount of data that should be send with the same message
+     * this function reduce the amount of data that should be send
+     *
      * @param $arrayData
+     * @return $arrayData
      */
     public function reduceCount($arrayData)
     {
@@ -92,32 +115,9 @@ class StatsdClient
     }
 
     /**
-     * Updates one or more stats.
-     *
-     * @param $stats array of StatsdDataInterface
-     * @param int $rate
-     */
-    public function prepareAndSend($stats, $rate = 1)
-    {
-        if (!is_array($stats)) {
-            if ($stats instanceof StatsdDataInterface) {
-                $stats = array($stats);
-            } else {
-                $this->throwException(new InvalidArgumentException());
-            }
-        }
-        $data = array();
-        foreach ($stats as $stat) {
-            if ($stat instanceof StatsdDataInterface) {
-                $data[$stat->getKey()] = $stat->getMessage();
-            } else {
-                $this->throwException(new InvalidArgumentException());
-            }
-        }
-        $this->send($data, $rate);
-    }
-
-    /**
+     *  Reference: https://github.com/etsy/statsd/blob/master/README.md
+     *  Sampling 0.1
+     *  Tells StatsD that this counter is being sent sampled every 1/10th of the time.
      *
      * @param $data
      * @param int $sampleRate
@@ -134,13 +134,17 @@ class StatsdClient
         return $data;
     }
     /*
-     * Squirt the metrics over UDP
+     * Send the metrics over UDP
      *
-     * @param array $data Array of messages to sent
+     * @param array|string|StatsdDataInterface  $data message(s) to sent
      * @param int $sampleRate Tells StatsD that this counter is being sent sampled every Xth of the time.
      */
-    public function send($data, $sampleRate = 1, $reduceData = false)
+    public function send($data, $sampleRate = 1)
     {
+        // check format
+        if ($data instanceof StatsdDataInterface || is_string($data)) {
+            $data = array($data);
+        }
         if (!is_array($data) || empty($data)) {
             return;
         }
@@ -148,12 +152,11 @@ class StatsdClient
         if ($sampleRate < 1) {
             $data = $this->appendSampleRate($data, $sampleRate);
         }
-
-        if ($reduceData) {
+        // reduce number of packets
+        if ($this->getReducePacket()) {
             $data = $this->reduceCount($data);
         }
-
-        // Wrap this in a try/catch - failures in any of this should be silently ignored
+        //failures in any of this should be silently ignored if ..
         try {
             $host = $this->getHost();
             $port = $this->getPort();
@@ -162,7 +165,6 @@ class StatsdClient
             $errno = 0;
             $errstr = '';
             $fp = $this->getSender()->open($protocol, $host, $port, $errno, $errstr);
-
             if (!$fp) {
                 return;
             }
@@ -174,7 +176,6 @@ class StatsdClient
             $this->throwException($e);
         }
     }
-
 
     /**
      * @param boolean $failSilently
@@ -254,6 +255,22 @@ class StatsdClient
     public function getSender()
     {
         return $this->sender;
+    }
+
+    /**
+     * @param boolean $reducePacket
+     */
+    public function setReducePacket($reducePacket)
+    {
+        $this->reducePacket = $reducePacket;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getReducePacket()
+    {
+        return $this->reducePacket;
     }
 
 
