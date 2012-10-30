@@ -41,13 +41,14 @@ class StatsdClient
     private $reducePacket;
 
     /**
+     *
+     * @param Service\SenderInterface $sender
      * @param $host
      * @param $port
      * @param $protocol
-     * @param Service\SenderInterface $sender
      * @param bool $fail_silently
      */
-    public function __construct($host, $port, $protocol, SenderInterface $sender, $reducePacket = false, $fail_silently = true)
+    public function __construct(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol = 'udp', $reducePacket = false, $fail_silently = true)
     {
         $this->host = $host;
         $this->port = $port;

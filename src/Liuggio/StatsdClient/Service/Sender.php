@@ -2,6 +2,8 @@
 
 namespace Liuggio\StatsdClient\Service;
 
+use Liuggio\StatsdClient\Service\SenderInterface;
+
 Class Sender implements SenderInterface
 {
     /**

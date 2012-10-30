@@ -1,6 +1,6 @@
 ## Statsd-php-client
 
-Is an Open Source, and Object Oriented Client for php
+Statsd-php-client is an Open Source, and Object Oriented Client for php
 
 - `StatsdDataFactory` creates the `Liuggio\StatsdClient\Entity\StatsdDataInterface` Objects
 
@@ -8,6 +8,10 @@ Is an Open Source, and Object Oriented Client for php
 
 - `StatsdClient` sends the `StatsdDataInterface` Objects created via the `Sender`
 
+
+## Example
+
+see the simple test file ../tets/Liuggio/StatsdClient/ReadmeTest.php
 
 
 ## Short Theory

@@ -43,7 +43,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $mockSender = $this->mockSenderWithAssertionOnWrite($messageToAssert);
 
-        $statsdClient = new StatsdClient('localhost', 10,'php', $mockSender, false, false);
+        $statsdClient = new StatsdClient($mockSender, 'localhost', 10,'php',false, false);
         return $statsdClient;
     }
 
