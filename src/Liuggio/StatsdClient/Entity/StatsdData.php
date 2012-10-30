@@ -56,20 +56,6 @@ class StatsdData implements StatsdDataInterface
     }
 
     /**
-     * return the value splitted by data and type
-     * @return array
-     */
-    public function getValueArray()
-    {
-        $type = null;
-        // take everything before the |
-        if (null !== $this->getValue()) {
-            $type = explode("|", $this->getValue(),2);
-        }
-        return $type;
-    }
-
-    /**
      * @return int
      */
     public function getMessage($withMetric = true)

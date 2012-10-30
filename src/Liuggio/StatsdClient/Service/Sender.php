@@ -13,8 +13,8 @@ Class Sender implements SenderInterface
      * @param null $timeout
      * @return resource
      */
-    public function open($host, $port, &$errno = null, &$errstr = null, $timeout = null) {
-        $fp = fsockopen($host, $port, $errno, $errstr, $timeout);
+    public function open($hostname, $port = null, &$errno = null, &$errstr = null, $timeout = null) {
+        $fp = fsockopen($hostname, $port, $errno, $errstr, $timeout);
         return $fp;
     }
 
@@ -23,8 +23,8 @@ Class Sender implements SenderInterface
      * @param $message
      * @return int
      */
-    function write($handle, $message) {
-        return fwrite($handle, $message);
+    function write($handle, $message, $length = null){
+        return fwrite($handle, $message, $length);
     }
 
     /**

@@ -15,14 +15,14 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->statsDataFactory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
     }
 
-    public function testCreateStatsData()
+    public function testProduceStatsdData()
     {
         $key = 'key';
         $value='val';
 
-        $obj = $this->statsDataFactory->createStatsdData($key, $value);
-        $this->assertEquals($key, $obj[0]->getKey());
-        $this->assertEquals($value, $obj[0]->getValue());
+        $obj = $this->statsDataFactory->produceStatsdData($key, $value);
+        $this->assertEquals($key, $obj->getKey());
+        $this->assertEquals($value, $obj->getValue());
     }
 
     public function testTiming()
@@ -32,21 +32,21 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $valueFloat = (string) floatval($value);
 
         $obj = $this->statsDataFactory->timing($key, $value);
-        $this->assertEquals($key, $obj[0]->getKey());
-        $this->assertContains($valueFloat, $obj[0]->getValue());
-        $this->assertContains('ms', $obj[0]->getMetric());
+        $this->assertEquals($key, $obj->getKey());
+        $this->assertContains($valueFloat, $obj->getValue());
+        $this->assertContains('ms', $obj->getMetric());
     }
 
-    public function testCreateStatsdData()
+    public function testProduceStatsdDataDecrement()
     {
         $key = 'key';
         $value = -1;
         $stringValue = intval($value);
 
-        $obj = $this->statsDataFactory->createStatsdData($key, $value);
-        $this->assertEquals($key, $obj[0]->getKey());
-        $this->assertEquals($stringValue, $obj[0]->getValue());
-        $this->assertEquals('c', $obj[0]->getMetric());
+        $obj = $this->statsDataFactory->produceStatsdData($key, $value);
+        $this->assertEquals($key, $obj->getKey());
+        $this->assertEquals($stringValue, $obj->getValue());
+        $this->assertEquals('c', $obj->getMetric());
     }
 
     public function testGauge()
@@ -56,9 +56,9 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $stringValue = (string) intval($value);
 
         $obj = $this->statsDataFactory->gauge($key, $value);
-        $this->assertEquals($key, $obj[0]->getKey());
-        $this->assertEquals($stringValue, $obj[0]->getValue());
-        $this->assertEquals('g', $obj[0]->getMetric());
+        $this->assertEquals($key, $obj->getKey());
+        $this->assertEquals($stringValue, $obj->getValue());
+        $this->assertEquals('g', $obj->getMetric());
     }
 
     public function testDecrement()
@@ -68,9 +68,9 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $stringValue = intval($value);
 
         $obj = $this->statsDataFactory->decrement($key);
-        $this->assertEquals($key, $obj[0]->getKey());
-        $this->assertEquals($stringValue, $obj[0]->getValue());
-        $this->assertEquals('c', $obj[0]->getMetric());
+        $this->assertEquals($key, $obj->getKey());
+        $this->assertEquals($stringValue, $obj->getValue());
+        $this->assertEquals('c', $obj->getMetric());
     }
 
     public function testcreateStatsdDataIncrement()
@@ -80,25 +80,9 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $stringValue = intval($value);
 
         $obj = $this->statsDataFactory->increment($key);
-        $this->assertEquals($key, $obj[0]->getKey());
-        $this->assertEquals($stringValue, $obj[0]->getValue());
-        $this->assertEquals('c', $obj[0]->getMetric());
+        $this->assertEquals($key, $obj->getKey());
+        $this->assertEquals($stringValue, $obj->getValue());
+        $this->assertEquals('c', $obj->getMetric());
     }
 
-//    public function testAddSampling()
-//    {
-//        $key = 'key';
-//        $value = 1;
-//
-//        $obj = new \Liuggio\StatsdClient\Entity\StatsdData();
-//        $obj->setKey($key);
-//        $obj->setValue('1');
-//        $obj->setMetric('c');
-//
-//
-//        $float = 0.1;
-//        $obj2 = $this->statsDataFactory->addSampling($obj, $float);
-//        $this->assertEquals($key, $obj2->getKey());
-//        $this->assertEquals('1|c|@0.10', $obj2->getValue());
-//    }
 }

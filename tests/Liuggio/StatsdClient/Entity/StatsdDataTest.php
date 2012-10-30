@@ -7,16 +7,6 @@ use Liuggio\StatsdClient\Entity\StatsdData;
 
 class StatsdDataTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testGetValueArray() {
-        $statsdData = new  StatsdData();
-        $statsdData->setKey('key');
-        $statsdData->setValue('value');
-        $statsdData->setMetric('c');
-        var_dump($statsdData->getValueArray());
-        $this->assertEquals($statsdData->getValueArray(), 'key:value|c');
-
-    }
     public function testGetMessage()
     {
         $statsdData = new  StatsdData();

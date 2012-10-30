@@ -5,7 +5,6 @@ namespace Liuggio\StatsdClient;
 use Liuggio\StatsdClient\Model\StatsdDataInterface;
 
 
-
 class StatsdDataFactory
 {
     /**
@@ -24,8 +23,9 @@ class StatsdDataFactory
      * @param string|array $stats The metric(s) to set.
      * @param float $time The elapsed time (ms) to log
      **/
-    public function timing($stats, $time) {
-        return $this->createStatsdData($stats, $time, 1, 'ms');
+    public function timing($stats, $time)
+    {
+        return $this->produceStatsdData($stats, $time, StatsdDataInterface::STATSD_METRIC_TIMING);
     }
 
     /**
@@ -34,8 +34,9 @@ class StatsdDataFactory
      * @param string|array $stats The metric(s) to set.
      * @param float $value The value for the stats.
      **/
-    public function gauge($stats, $value) {
-        return $this->createStatsdData($stats, $value, 1, 'g');
+    public function gauge($stats, $value)
+    {
+        return $this->produceStatsdData($stats, $value, StatsdDataInterface::STATSD_METRIC_GAUGE);
     }
 
     /**
@@ -53,8 +54,9 @@ class StatsdDataFactory
      * @param float $value The value for the stats.
      * @return array
      **/
-    public function set($stats, $value) {
-        return $this->createStatsdData($stats, $value, 1, 's');
+    public function set($stats, $value)
+    {
+        return $this->produceStatsdData($stats, $value, StatsdDataInterface::STATSD_METRIC_SET);
     }
 
     /**
@@ -64,8 +66,9 @@ class StatsdDataFactory
      * @param float|1 $sampleRate the rate (0-1) for sampling.
      * @return array
      **/
-    public function increment($stats, $sampleRate=1) {
-        return $this->createStatsdData($stats, 1, $sampleRate, 'c');
+    public function increment($stats)
+    {
+        return $this->produceStatsdData($stats, 1, StatsdDataInterface::STATSD_METRIC_COUNT);
     }
 
     /**
@@ -75,37 +78,41 @@ class StatsdDataFactory
      * @param float|1 $sampleRate the rate (0-1) for sampling.
      * @return mixed
      **/
-    public function decrement($stats, $sampleRate=1) {
-        return $this->createStatsdData($stats, -1, $sampleRate, 'c');
+    public function decrement($stats)
+    {
+        return $this->produceStatsdData($stats, -1, StatsdDataInterface::STATSD_METRIC_COUNT);
     }
 
     /**
      * Updates one or more stats.
      *
-     * @param string|array $stats The metric(s) to update. Should be either a string or array of metrics.
-     * @param int|1 $delta The amount to increment/decrement each metric by.
-     * @param float|1 $sampleRate the rate (0-1) for sampling.
+     * @param string $key The metric to . Should be either a string or array of metrics.
+     * @param int|1 $value The amount to increment/decrement each metric by.
      * @param string|c $metric The metric type ("c" for count, "ms" for timing, "g" for gauge, "s" for set)
-     * @return array
+     * @return StatsdDataInterface
      **/
-    public function createStatsdData($stats, $val=1, $sampleRate=1, $metric='c') {
-        if (!is_array($stats)) { $stats = array($stats); }
-        $data = array();
-        foreach($stats as $stat) {
-            $StatsdData = $this->getEntityClass();
-            $StatsdData = new $StatsdData();
-            if (null !== $stat) {
-                $StatsdData->setKey($stat);
-            }
-            if (null !== $val) {
-                $StatsdData->setValue($val);
-            }
-            if (null !== $metric) {
-                $StatsdData->setMetric($metric);
-            }
-            $data[] = $StatsdData;
+    public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
+    {
+        $StatsdData = $this->produceStatsdDataEntity();
+
+        if (null !== $key) {
+            $StatsdData->setKey($key);
         }
-        return $data;
+
+        if (null !== $value) {
+            $StatsdData->setValue($value);
+        }
+
+        if (null !== $metric) {
+            $StatsdData->setMetric($metric);
+        }
+
+        return $StatsdData;
+    }
+
+    public function produceStatsdDataEntity() {
+        $StatsdData = $this->getEntityClass();
+        return new $StatsdData();
     }
 
     /**
