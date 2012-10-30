@@ -1,6 +1,6 @@
 ## Statsd-php-client
 
-Statsd-php-client is an Open Source, and Object Oriented Client for php
+Statsd-php-client is an Open Source, and Object Oriented Client for etsy/Statsd written in php
 
 - `StatsdDataFactory` creates the `Liuggio\StatsdClient\Entity\StatsdDataInterface` Objects
 

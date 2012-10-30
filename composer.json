@@ -1,7 +1,7 @@
 {
     "name": "liuggio/statsd-php-client",
     "description": "Statsd (Object Oriented) client library for PHP",
-    "keywords": ["statsd", "monitoring"],
+    "keywords": ["statsd", "monitoring", "etsy", "php"],
     "homepage": "http://github.com/liuggio/statsd-client",
     "type": "library",
     "license": "MIT",
