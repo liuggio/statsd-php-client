@@ -11,7 +11,7 @@ Statsd-php-client is an Open Source, and Object Oriented Client for php
 
 ## Example
 
-see the simple test file ../tets/Liuggio/StatsdClient/ReadmeTest.php
+see the simple test file [tests/Liuggio/StatsdClient/ReadmeTest.php](https://github.com/liuggio/statsd-php-client/blob/master/tests/Liuggio/StatsdClient/ReadmeTest.php)
 
 
 ## Short Theory
