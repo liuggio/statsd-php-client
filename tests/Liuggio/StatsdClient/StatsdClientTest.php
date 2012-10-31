@@ -43,7 +43,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $mockSender = $this->mockSenderWithAssertionOnWrite($messageToAssert);
 
-        $statsdClient = new StatsdClient($mockSender, 'localhost', 10,false, false);
+        $statsdClient = new StatsdClient($mockSender, 'udp://localhost', 100, false, false);
         return $statsdClient;
     }
 
@@ -68,13 +68,6 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
     public static function provider()
     {
-//        string(13) "increment:1|c"
-//        string(11) "set:value|s"
-//        string(13) "gauge:value|g"
-//        string(12) "timing:10|ms"
-//        string(14) "decrement:-1|c"
-//        string(7) "key:1|c"
-
         /**
          * First
          */
