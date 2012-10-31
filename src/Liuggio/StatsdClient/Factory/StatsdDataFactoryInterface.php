@@ -76,39 +76,6 @@ Interface StatsdDataFactoryInterface
      **/
     function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT);
 
-    /**
-     * standard factory method for the StatsdDataInterface object
-     *
-     * @abstract
-     * @return mixed
-     */
-    function produceStatsdDataEntity();
-
-    /**
-     *
-     * @abstract
-     * @param boolean $failSilently
-     */
-    function setFailSilently($failSilently);
-
-    /**
-     * @return boolean
-     */
-    function getFailSilently();
-
-    /**
-     *
-     * @abstract
-     * @param \Liuggio\StatsdClient\Entity\StatsdDataInterface $entityClass
-     */
-    function setEntityClass($entityClass);
-
-    /**
-     *
-     * @abstract
-     * @return \Liuggio\StatsdClient\Entity\StatsdDataInterface
-     */
-    function getEntityClass();
 
 
 }
