@@ -49,7 +49,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
     public function mockFactory() {
 
-        $mock =  $this->getMock('\\Liuggio\\StatsdClient\\StatsdDataFactory', array('timing'));
+        $mock =  $this->getMock('\\Liuggio\\StatsdClient\\Factory\\StatsdDataFactory', array('timing'));
 
         $statsData = new StatsdData();
         $statsData->setKey('key');

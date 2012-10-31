@@ -3,7 +3,7 @@
 namespace Liuggio\StatsdClient;
 
 use Liuggio\StatsdClient\StatsdClient;
-use Liuggio\StatsdClient\StatsdDataFactory;
+use Liuggio\StatsdClient\Factory\StatsdDataFactory;
 //use Liuggio\StatsdClient\Sender\SocketSender;
 
 

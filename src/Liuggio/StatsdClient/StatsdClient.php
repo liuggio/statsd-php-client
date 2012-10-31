@@ -131,8 +131,7 @@ class StatsdClient
     /*
      * Send the metrics over UDP
      *
-     * @param array|string|StatsdDataInterface  $data message(s) to sent
-     * @param int $sampleRate Tells StatsD that this counter is being sent sampled every Xth of the time.
+     * @inherit
      */
     public function send($data, $sampleRate = 1)
     {

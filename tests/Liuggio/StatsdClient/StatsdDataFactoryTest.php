@@ -1,9 +1,9 @@
 <?php
 
-namespace Liuggio\StatsdClient;
+namespace Liuggio\StatsdClient\Factory;
 
 
-use Liuggio\StatsdClient\StatsdDataFactory;
+use Liuggio\StatsdClient\Factory\StatsdDataFactory;
 
 
 class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase

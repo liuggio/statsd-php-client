@@ -1,11 +1,11 @@
 <?php
 
-namespace Liuggio\StatsdClient;
+namespace Liuggio\StatsdClient\Factory;
 
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 
 
-class StatsdDataFactory
+class StatsdDataFactory implements StatsdDataFactoryInterface
 {
     /**
      * @var \Liuggio\StatsdClient\Entity\StatsdDataInterface
@@ -18,10 +18,7 @@ class StatsdDataFactory
     }
 
     /**
-     * This function creates a 'timing' StatsdData
-     *
-     * @param string|array $stats The metric(s) to set.
-     * @param float $time The elapsed time (ms) to log
+     * @inherit
      **/
     public function timing($key, $time)
     {
@@ -29,10 +26,7 @@ class StatsdDataFactory
     }
 
     /**
-     * This function creates a 'gauge' StatsdData
-     *
-     * @param string|array $stats The metric(s) to set.
-     * @param float $value The value for the stats.
+     * @inherit
      **/
     public function gauge($key, $value)
     {
@@ -40,20 +34,7 @@ class StatsdDataFactory
     }
 
     /**
-     * This function creates a 'set' StatsdData object
-     * A "Set" is a count of unique events.
-     * This data type acts like a counter, but supports counting
-     * of unique occurences of values between flushes. The backend
-     * receives the number of unique events that happened since
-     * the last flush.
-     *
-     * The reference use case involved tracking the number of active
-     * and logged in users by sending the current userId of a user
-     * with each request with a key of "uniques" (or similar).
-     *
-     * @param string|array $stats The metric(s) to set.
-     * @param float $value The value for the stats.
-     * @return array
+     * @inherit
      **/
     public function set($key, $value)
     {
@@ -73,11 +54,7 @@ class StatsdDataFactory
     }
 
     /**
-     * This function creates a 'decrement' StatsdData object.
-     *
-     * @param string|array $key The metric(s) to decrement.
-     * @param float|1 $sampleRate the rate (0-1) for sampling.
-     * @return mixed
+     * @inherit
      **/
     public function decrement($key)
     {
@@ -85,12 +62,7 @@ class StatsdDataFactory
     }
 
     /**
-     * Procude a StatsdDataInterface Object
-     *
-     * @param string $key The key of the metric
-     * @param int|1 $value The amount to increment/decrement each metric by.
-     * @param string|c $metric The metric type ("c" for count, "ms" for timing, "g" for gauge, "s" for set)
-     * @return StatsdDataInterface
+     * @inherit
      **/
     public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
     {
@@ -112,45 +84,42 @@ class StatsdDataFactory
     }
 
     /**
-     * standard factory method for the StatsdDataInterface object
-     * @return mixed
-     */
+     * @inherit
+     **/
     public function produceStatsdDataEntity() {
         $statsdData = $this->getEntityClass();
         return new $statsdData();
     }
 
     /**
-     * @param boolean $failSilently
-     */
+     * @inherit
+     **/
     public function setFailSilently($failSilently)
     {
         $this->failSilently = $failSilently;
     }
 
     /**
-     * @return boolean
-     */
+     * @inherit
+     **/
     public function getFailSilently()
     {
         return $this->failSilently;
     }
 
     /**
-     * @param \Liuggio\StatsdClient\Entity\StatsdDataInterface $entityClass
-     */
+     * @inherit
+     **/
     public function setEntityClass($entityClass)
     {
         $this->entityClass = $entityClass;
     }
 
     /**
-     * @return \Liuggio\StatsdClient\Entity\StatsdDataInterface
-     */
+     * @inherit
+     **/
     public function getEntityClass()
     {
         return $this->entityClass;
     }
-
-
 }
