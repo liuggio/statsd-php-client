@@ -2,7 +2,7 @@
 
 namespace Liuggio\StatsdClient;
 
-use Liuggio\StatsdClient\Service\SenderInterface;
+use Liuggio\StatsdClient\Sender\SenderInterface;
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 use Liuggio\StatsdClient\Exception\InvalidArgumentException;
 
@@ -243,7 +243,7 @@ class StatsdClient
     }
 
     /**
-     * @param \Liuggio\StatsdClient\Service\SenderInterface $sender
+     * @param \Liuggio\StatsdClient\Sender\SenderInterface $sender
      */
     public function setSender($sender)
     {
@@ -251,7 +251,7 @@ class StatsdClient
     }
 
     /**
-     * @return \Liuggio\StatsdClient\Service\SenderInterface
+     * @return \Liuggio\StatsdClient\Sender\SenderInterface
      */
     public function getSender()
     {

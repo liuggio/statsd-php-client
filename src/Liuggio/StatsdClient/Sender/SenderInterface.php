@@ -1,6 +1,6 @@
 <?php
 
-namespace Liuggio\StatsdClient\Service;
+namespace Liuggio\StatsdClient\Sender;
 
 Interface SenderInterface
 {

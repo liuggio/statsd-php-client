@@ -18,6 +18,8 @@
 
 see the simple test file [tests/Liuggio/StatsdClient/ReadmeTest.php](https://github.com/liuggio/statsd-php-client/blob/master/tests/Liuggio/StatsdClient/ReadmeTest.php)
 
+If you want to see the echo of the messages sent uncomment the line [#64](https://github.com/liuggio/statsd-php-client/blob/master/tests/Liuggio/StatsdClient/ReadmeTest.php#L62)
+
 
 ## Short Theory
 

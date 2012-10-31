@@ -1,10 +1,10 @@
 <?php
 
-namespace Liuggio\StatsdClient\Service;
+namespace Liuggio\StatsdClient\Sender;
 
-use Liuggio\StatsdClient\Service\SenderInterface;
+use Liuggio\StatsdClient\Sender\SenderInterface;
 
-Class Sender implements SenderInterface
+Class SocketSender implements SenderInterface
 {
     /**
      * @inherit

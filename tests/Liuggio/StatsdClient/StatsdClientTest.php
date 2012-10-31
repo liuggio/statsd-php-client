@@ -10,7 +10,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
     public function mockSenderWithAssertionOnWrite($messageToAssert) {
 
-        $mock =  $this->getMock('\\Liuggio\\StatsdClient\\Service\\Sender', array('open', 'write', 'close'));
+        $mock =  $this->getMock('\\Liuggio\\StatsdClient\\Sender\\SocketSender', array('open', 'write', 'close'));
 
         $phpUnit = $this;
         $mock->expects($this->any())

@@ -4,30 +4,18 @@ namespace Liuggio\StatsdClient;
 
 use Liuggio\StatsdClient\StatsdClient;
 use Liuggio\StatsdClient\StatsdDataFactory;
-use Liuggio\StatsdClient\Service\Sender;
+//use Liuggio\StatsdClient\Sender\SocketSender;
+
 
 class ReadmeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFullUsage() {
+    public function testFullUsageWithObject() {
 
-        // init the client
-        // in your php script: $sender = new Sender();
-        $sender =  $this->getMock('\\Liuggio\\StatsdClient\\Service\\SenderInterface', array('open', 'write', 'close'));
-        $sender->expects($this->once())
-            ->method('open')
-            ->will($this->returnValue(true));
+        $sender = $this->mockSender();
+        // $sender = new Sender();
 
-        $sender->expects($this->any())  //If you set the reduce = true into the StatsdClient the write will be called once
-            ->method('write')
-            ->will($this->returnValue(true));
-
-        $sender->expects($this->once())
-            ->method('close')
-            ->will($this->returnValue(true));
-
-
+        // StatsdClient(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol = 'udp', $reducePacket = true, $fail_silently = true)
         $client = new StatsdClient($sender);
-
         $factory = new StatsdDataFactory('\\Liuggio\\StatsdClient\\Entity\\StatsdData');
 
         // create the data with the factory
@@ -41,4 +29,44 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         $client->send($data);
     }
 
+
+
+    public function testFullUsageArray() {
+        
+        $sender = $this->mockSender();
+        // $sender = new Sender();
+
+        // StatsdClient(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol = 'udp', $reducePacket = true, $fail_silently = true)
+        $client = new StatsdClient($sender, $host = 'localhost', $port = 8126, $protocol = 'udp', $reducePacket = true, $fail_silently = true);
+ 
+        $data[] ="increment:1|c";
+        $data[] ="set:value|s";
+        $data[] ="gauge:value|g";
+        $data[] = "timing:10|ms";
+        $data[] = "decrement:-1|c";
+        $data[] ="key:1|c";         
+
+        // send the data as array or directly as object
+        $client->send($data);
+    }
+
+
+    private function mockSender() {
+        $sender =  $this->getMock('\\Liuggio\\StatsdClient\\Sender\\SenderInterface', array('open', 'write', 'close'));
+        $sender->expects($this->once())
+            ->method('open')
+            ->will($this->returnValue(true));
+
+        $sender->expects($this->any())  //If you set the reduce = true into the StatsdClient the write will be called once
+            ->method('write')
+            ->will($this->returnCallBack(function($fp, $message) {
+             //  echo PHP_EOL . "- " . $message;
+        }));
+
+        $sender->expects($this->once())
+            ->method('close')
+            ->will($this->returnValue(true));
+
+        return $sender;
+    }
 }
