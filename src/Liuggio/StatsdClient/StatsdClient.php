@@ -21,11 +21,6 @@ class StatsdClient
     private $port;
 
     /**
-     * @var
-     */
-    private $protocol;
-
-    /**
      * @var boolean
      */
     private $failSilently;
@@ -45,10 +40,9 @@ class StatsdClient
      * @param Service\SenderInterface $sender
      * @param $host
      * @param $port
-     * @param $protocol
      * @param bool $fail_silently
      */
-    public function __construct(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol = 'udp', $reducePacket = false, $fail_silently = true)
+    public function __construct(SenderInterface $sender, $host = 'udp://localhost', $port = 8126, $reducePacket = true, $fail_silently = true)
     {
         $this->host = $host;
         $this->port = $port;
@@ -160,12 +154,11 @@ class StatsdClient
         //failures in any of this should be silently ignored if ..
         try {
             $host = $this->getHost();
-            $port = $this->getPort();
-            $protocol = $this->getProtocol();
+            $port = $this->getPort(); 
             // php://temp
             $errno = 0;
             $errstr = '';
-            $fp = $this->getSender()->open($protocol, $host, $port, $errno, $errstr);
+            $fp = $this->getSender()->open($host, $port, $errno, $errstr);
             if (!$fp) {
                 return;
             }
@@ -226,22 +219,7 @@ class StatsdClient
         return $this->port;
     }
 
-    /**
-     * @param  $protocol
-     */
-    public function setProtocol($protocol)
-    {
-        $this->protocol = $protocol;
-    }
-
-    /**
-     * @return
-     */
-    public function getProtocol()
-    {
-        return $this->protocol;
-    }
-
+ 
     /**
      * @param \Liuggio\StatsdClient\Sender\SenderInterface $sender
      */
