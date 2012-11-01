@@ -6,11 +6,8 @@ use Liuggio\StatsdClient\Sender\SenderInterface;
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 use Liuggio\StatsdClient\Exception\InvalidArgumentException;
 
-class StatsdClient
+class StatsdClient implements StatsdClientInterface
 {
-
-    const MAX_UDP_SIZE_STR = 548;
-
     /**
      * @var string
      */
@@ -19,14 +16,17 @@ class StatsdClient
      * @var int
      */
     private $port;
-
+    /**
+     * @var string
+     */
+    private $protocol;
     /**
      * @var boolean
      */
     private $failSilently;
 
     /**
-     * @var Service\SenderInterface
+     * @var \Liuggio\StatsdClient\Sender\SenderInterface
      */
     private $sender;
 
@@ -37,15 +37,16 @@ class StatsdClient
 
     /**
      *
-     * @param Service\SenderInterface $sender
+     * @param \Liuggio\StatsdClient\Sender\SenderInterface $sender
      * @param $host
      * @param $port
      * @param bool $fail_silently
      */
-    public function __construct(SenderInterface $sender, $host = 'udp://localhost', $port = 8126, $reducePacket = true, $fail_silently = true)
+    public function __construct(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol = 'udp', $reducePacket = true, $fail_silently = true)
     {
         $this->host = $host;
         $this->port = $port;
+        $this->protocol = $protocol;
         $this->sender = $sender;
         $this->reducePacket = $reducePacket;
         $this->failSilently = $fail_silently;
@@ -57,9 +58,9 @@ class StatsdClient
      * @throws \Exception
      */
     private function throwException(\Exception $exception) {
-            if (!$this->getFailSilently()) {
-                throw $exception;
-            }
+        if (!$this->getFailSilently()) {
+            throw $exception;
+        }
     }
 
     /**
@@ -152,17 +153,12 @@ class StatsdClient
         }
         //failures in any of this should be silently ignored if ..
         try {
-            $host = $this->getHost();
-            $port = $this->getPort(); 
-            // php://temp
-            $errno = 0;
-            $errstr = '';
-            $fp = $this->getSender()->open($host, $port, $errno, $errstr);
+            $fp = $this->getSender()->open($this->getHost(), $this->getPort(), $this->getProtocol());
             if (!$fp) {
                 return;
             }
             foreach ($data as $key => $message) {
-                $this->getSender()->write($fp, $message);
+                $written = $this->getSender()->write($fp, $message);
             }
             $this->getSender()->close($fp);
         } catch (\Exception $e) {
@@ -222,7 +218,7 @@ class StatsdClient
     /**
      * @param \Liuggio\StatsdClient\Sender\SenderInterface $sender
      */
-    public function setSender($sender)
+    public function setSender(SenderInterface $sender)
     {
         $this->sender = $sender;
     }
@@ -249,6 +245,22 @@ class StatsdClient
     public function getReducePacket()
     {
         return $this->reducePacket;
+    }
+
+    /**
+     * @param string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
     }
 
 

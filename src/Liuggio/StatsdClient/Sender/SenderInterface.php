@@ -8,12 +8,10 @@ Interface SenderInterface
      * @abstract
      * @param $hostname
      * @param null $port
-     * @param null $errno
-     * @param null $errstr
-     * @param null $timeout
+     * @param null $protocol
      * @return mixed
      */
-    function open($hostname, $port = null, &$errno = null, &$errstr = null, $timeout = null);
+    function open($hostname, $port = null, $protocol = null);
 
     /**
      * @abstract
