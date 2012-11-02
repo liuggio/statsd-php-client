@@ -36,8 +36,8 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         $sender = $this->mockSender();
         // $sender = new Sender();
 
-        // StatsdClient(SenderInterface $sender, $host = 'udp://localhost', $port = 8126, $reducePacket = true, $fail_silently = true)
-        $client = new StatsdClient($sender, $host = 'udp://localhost', $port = 8126, $reducePacket = true, $fail_silently = true);
+        // StatsdClient(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol='udp', $reducePacket = true, $fail_silently = true)
+        $client = new StatsdClient($sender, $host = 'localhost', $port = 8126, 'udp', $reducePacket = true, $fail_silently = true);
  
         $data[] ="increment:1|c";
         $data[] ="set:value|s";
