@@ -13,6 +13,19 @@
 
 - `StatsdClient` sends the created objects via the `Sender` to the server
 
+## Why use this library instead the [statsd/php-example](https://github.com/etsy/statsd/blob/master/examples/php-example.php)?
+
+- You are wise.
+
+- This library is totally tested.
+
+- This library optimizes the messages to send, compressing multiple messages in individual UDP packets.
+
+- This library pays attention to the maximum length of the UDP.
+
+- This library is made by Objects not array, but it also accepts array.
+
+
 
 ## Example
 
