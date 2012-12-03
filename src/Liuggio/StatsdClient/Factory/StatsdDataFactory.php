@@ -18,7 +18,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function timing($key, $time)
     {
@@ -26,7 +26,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function gauge($key, $value)
     {
@@ -34,7 +34,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function set($key, $value)
     {
@@ -54,7 +54,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function decrement($key)
     {
@@ -62,7 +62,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
     {
@@ -84,7 +84,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function produceStatsdDataEntity() {
         $statsdData = $this->getEntityClass();
@@ -92,7 +92,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function setFailSilently($failSilently)
     {
@@ -100,7 +100,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function getFailSilently()
     {
@@ -108,7 +108,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function setEntityClass($entityClass)
     {
@@ -116,7 +116,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      **/
     public function getEntityClass()
     {
