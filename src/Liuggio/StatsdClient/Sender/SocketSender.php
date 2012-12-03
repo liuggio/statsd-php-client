@@ -9,7 +9,7 @@ Class SocketSender implements SenderInterface
     private $port;
     private $host;
     /**
-     * {@inherit}
+     * {@inheritDoc}
      */
     public function open($hostname, $port = null, $protocol = null) {
         $this->host = $hostname;
@@ -32,7 +32,7 @@ Class SocketSender implements SenderInterface
     }
 
     /**
-     * {@inherit}
+     * {@inheritDoc}
      */
     function write($handle, $message, $length = null){
 
@@ -40,7 +40,7 @@ Class SocketSender implements SenderInterface
     }
 
     /**
-     * {@inherit}
+     * {@inheritDoc}
      */
     function close($handle){
         socket_close($handle);

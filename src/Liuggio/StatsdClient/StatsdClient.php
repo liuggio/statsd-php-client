@@ -132,7 +132,7 @@ class StatsdClient implements StatsdClientInterface
     /*
      * Send the metrics over UDP
      *
-     * {@inherit}
+     * {@inheritDoc}
      */
     public function send($data, $sampleRate = 1)
     {
