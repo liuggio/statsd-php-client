@@ -6,7 +6,7 @@ namespace Liuggio\StatsdClient\Sender;
 Class EchoSender implements SenderInterface
 {
     /**
-     * @inherit
+     * {@inherit}
      */
     public function open($hostname, $port = null, $protocol = null) {
         echo "[open]";
@@ -14,7 +14,7 @@ Class EchoSender implements SenderInterface
     }
 
     /**
-     * @inherit
+     * {@inherit}
      */
     function write($handle, $message, $length = null){
         echo "[$message]";
@@ -22,7 +22,7 @@ Class EchoSender implements SenderInterface
     }
 
     /**
-     * @inherit
+     * {@inherit}
      */
     function close($handle){
         echo "[closed]";
