@@ -29,10 +29,24 @@
 
 ## Example
 
-see the simple test file [tests/Liuggio/StatsdClient/ReadmeTest.php](https://github.com/liuggio/statsd-php-client/blob/master/tests/Liuggio/StatsdClient/ReadmeTest.php)
+```php
 
-If you want to see the echo of the messages sent uncomment the line [#64](https://github.com/liuggio/statsd-php-client/blob/master/tests/Liuggio/StatsdClient/ReadmeTest.php#L62)
+        $sender = new SocketSender();
 
+        // StatsdClient(SenderInterface $sender, $host = 'udp://localhost', $port = 8126, $reducePacket = true, $fail_silently = true)
+        $client = new StatsdClient($sender);
+        $factory = new StatsdDataFactory('\\Liuggio\\StatsdClient\\Entity\\StatsdData');
+
+        // create the data with the factory
+        $data[] = $factory->timing('usageTime', 100);
+        $data[] = $factory->increment('visitor');
+        $data[] = $factory->decrement('click');
+        $data[] = $factory->gauge('gaugor', 333);
+        $data[] = $factory->set('uniques', 765);
+
+        // send the data as array or directly as object
+        $client->send($data);
+```
 
 ## Short Theory
 
@@ -80,4 +94,3 @@ composer.phar install
 ``` bash
 phpunit --coverage-html reports
 ```
-
