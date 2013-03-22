@@ -38,8 +38,10 @@ class StatsdClient implements StatsdClientInterface
     /**
      *
      * @param \Liuggio\StatsdClient\Sender\SenderInterface $sender
-     * @param $host
-     * @param $port
+     * @param string $host
+     * @param int $port
+     * @param string $protocol
+     * @param bool $reducePacket
      * @param bool $fail_silently
      */
     public function __construct(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol = 'udp', $reducePacket = true, $fail_silently = true)
@@ -57,7 +59,8 @@ class StatsdClient implements StatsdClientInterface
      * @param \Exception $exception
      * @throws \Exception
      */
-    private function throwException(\Exception $exception) {
+    private function throwException(\Exception $exception)
+    {
         if (!$this->getFailSilently()) {
             throw $exception;
         }
@@ -100,7 +103,7 @@ class StatsdClient implements StatsdClientInterface
      * this function reduce the amount of data that should be send
      *
      * @param $arrayData
-     * @return $arrayData
+     * @return array
      */
     public function reduceCount($arrayData)
     {
@@ -262,6 +265,4 @@ class StatsdClient implements StatsdClientInterface
     {
         return $this->protocol;
     }
-
-
 }

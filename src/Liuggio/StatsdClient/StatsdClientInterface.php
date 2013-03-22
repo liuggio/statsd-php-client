@@ -19,5 +19,4 @@ Interface StatsdClientInterface
      * @param int $sampleRate Tells StatsD that this counter is being sent sampled every Xth of the time.
      */
     function send($data, $sampleRate = 1);
-
 }

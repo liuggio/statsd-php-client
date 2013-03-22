@@ -11,7 +11,8 @@ Class SocketSender implements SenderInterface
     /**
      * {@inheritDoc}
      */
-    public function open($hostname, $port = null, $protocol = null) {
+    public function open($hostname, $port = null, $protocol = null)
+    {
         $this->host = $hostname;
         $this->port = $port;
 
@@ -34,15 +35,17 @@ Class SocketSender implements SenderInterface
     /**
      * {@inheritDoc}
      */
-    function write($handle, $message, $length = null){
+    function write($handle, $message, $length = null)
+    {
 
-       return socket_sendto($handle, $message, strlen($message), 0, $this->host, $this->port);
+        return socket_sendto($handle, $message, strlen($message), 0, $this->host, $this->port);
     }
 
     /**
      * {@inheritDoc}
      */
-    function close($handle){
+    function close($handle)
+    {
         socket_close($handle);
     }
 }
