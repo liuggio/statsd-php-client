@@ -7,42 +7,84 @@ use Liuggio\StatsdClient\Exception\InvalidArgumentException;
 Class SocketSender implements SenderInterface
 {
     private $port;
+
     private $host;
-    /**
-     * {@inheritDoc}
-     */
-    public function open($hostname, $port = null, $protocol = null) {
+
+    private $protocol;
+
+    public function __construct($hostname, $port = null, $protocol = 'udp')
+    {
         $this->host = $hostname;
         $this->port = $port;
 
         switch ($protocol) {
             case 'udp':
-                $protocolSOL = SOL_UDP;
+                $this->protocol = SOL_UDP;
                 break;
             case 'tcp':
-                $protocolSOL = SOL_TCP;
+                $this->protocol = SOL_TCP;
                 break;
             default:
-                throw new InvalidArgumentException('use udp or tcp as protocol');
+                throw new InvalidArgumentException(sprintf('Use udp or tcp as protocol given %s', $protocol));
                 break;
         }
 
-        $fp = socket_create(AF_INET, SOCK_DGRAM, $protocolSOL);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function open()
+    {
+        $fp = socket_create(AF_INET, SOCK_DGRAM, $this->getProtocol());
+
         return $fp;
     }
 
     /**
      * {@inheritDoc}
      */
-    function write($handle, $message, $length = null){
-
-       return socket_sendto($handle, $message, strlen($message), 0, $this->host, $this->port);
+    public function write($handle, $message, $length = null)
+    {
+        return socket_sendto($handle, $message, strlen($message), 0, $this->getHost(), $this->getPort());
     }
 
     /**
      * {@inheritDoc}
      */
-    function close($handle){
+    public function close($handle)
+    {
         socket_close($handle);
+    }
+
+
+    protected function setHost($host)
+    {
+        $this->host = $host;
+    }
+
+    protected function getHost()
+    {
+        return $this->host;
+    }
+
+    protected function setPort($port)
+    {
+        $this->port = $port;
+    }
+
+    protected function getPort()
+    {
+        return $this->port;
+    }
+
+    protected function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
+    }
+
+    protected function getProtocol()
+    {
+        return $this->protocol;
     }
 }

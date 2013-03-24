@@ -16,7 +16,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
 
         // StatsdClient(SenderInterface $sender, $host = 'udp://localhost', $port = 8126, $reducePacket = true, $fail_silently = true)
         $client = new StatsdClient($sender);
-        $factory = new StatsdDataFactory('\\Liuggio\\StatsdClient\\Entity\\StatsdData');
+        $factory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
 
         // create the data with the factory
         $data[] = $factory->timing('usageTime', 100);
@@ -52,7 +52,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
 
 
     private function mockSender() {
-        $sender =  $this->getMock('\\Liuggio\\StatsdClient\\Sender\\SenderInterface', array('open', 'write', 'close'));
+        $sender =  $this->getMock('\Liuggio\StatsdClient\Sender\SenderInterface', array('open', 'write', 'close'));
         $sender->expects($this->once())
             ->method('open')
             ->will($this->returnValue(true));
