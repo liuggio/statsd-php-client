@@ -8,7 +8,7 @@ Class EchoSender implements SenderInterface
     /**
      * {@inheritDoc}
      */
-    public function open($hostname, $port = null, $protocol = null)
+    public function open()
     {
         echo "[open]";
         return true;

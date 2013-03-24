@@ -9,18 +9,6 @@ use Liuggio\StatsdClient\Exception\InvalidArgumentException;
 class StatsdClient implements StatsdClientInterface
 {
     /**
-     * @var string
-     */
-    private $host;
-    /**
-     * @var int
-     */
-    private $port;
-    /**
-     * @var string
-     */
-    private $protocol;
-    /**
      * @var boolean
      */
     private $failSilently;
@@ -36,27 +24,24 @@ class StatsdClient implements StatsdClientInterface
     private $reducePacket;
 
     /**
+     * Constructor.
      *
      * @param \Liuggio\StatsdClient\Sender\SenderInterface $sender
-     * @param string $host
-     * @param int $port
-     * @param string $protocol
-     * @param bool $reducePacket
-     * @param bool $fail_silently
+     * @param Boolean $reducePacket
+     * @param Boolean $fail_silently
      */
-    public function __construct(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol = 'udp', $reducePacket = true, $fail_silently = true)
+    public function __construct(SenderInterface $sender, $reducePacket = true, $fail_silently = true)
     {
-        $this->host = $host;
-        $this->port = $port;
-        $this->protocol = $protocol;
         $this->sender = $sender;
         $this->reducePacket = $reducePacket;
         $this->failSilently = $fail_silently;
     }
 
     /**
-     * Throws an exc only if failSilently if  getFailSilently is false
+     * Throws an exc only if failSilently if  getFailSilently is false.
+     *
      * @param \Exception $exception
+     *
      * @throws \Exception
      */
     private function throwException(\Exception $exception)
@@ -72,8 +57,9 @@ class StatsdClient implements StatsdClientInterface
      * https://github.com/etsy/statsd/blob/master/README.md
      * All metrics can also be batch send in a single UDP packet, separated by a newline character.
      *
-     * @param $result
-     * @param $item
+     * @param array $result
+     * @param array $item
+     *
      * @return array
      */
     function doReduce($result, $item)
@@ -89,9 +75,9 @@ class StatsdClient implements StatsdClientInterface
             array_push($result, $oldLastItem);
         } else {
             //going to modifying the existing
-            $separator= '';
+            $separator = '';
             if ($sizeResult > 0) {
-                $separator= PHP_EOL;
+                $separator = PHP_EOL;
             }
             $oldLastItem = sprintf("%s%s%s", $oldLastItem, $separator, $message);
             array_push($result, $oldLastItem);
@@ -103,7 +89,7 @@ class StatsdClient implements StatsdClientInterface
      * this function reduce the amount of data that should be send
      *
      * @param $arrayData
-     * @return array
+     * @return $arrayData
      */
     public function reduceCount($arrayData)
     {
@@ -132,6 +118,7 @@ class StatsdClient implements StatsdClientInterface
         }
         return $data;
     }
+
     /*
      * Send the metrics over UDP
      *
@@ -156,17 +143,20 @@ class StatsdClient implements StatsdClientInterface
         }
         //failures in any of this should be silently ignored if ..
         try {
-            $fp = $this->getSender()->open($this->getHost(), $this->getPort(), $this->getProtocol());
+            $fp = $this->getSender()->open();
             if (!$fp) {
                 return;
             }
+            $written = 0;
             foreach ($data as $key => $message) {
-                $written = $this->getSender()->write($fp, $message);
+                $written += $this->getSender()->write($fp, $message);
             }
             $this->getSender()->close($fp);
         } catch (\Exception $e) {
             $this->throwException($e);
         }
+
+        return $written;
     }
 
     /**
@@ -184,39 +174,6 @@ class StatsdClient implements StatsdClientInterface
     {
         return $this->failSilently;
     }
-
-    /**
-     * @param string $host
-     */
-    public function setHost($host)
-    {
-        $this->host = $host;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHost()
-    {
-        return $this->host;
-    }
-
-    /**
-     * @param int $port
-     */
-    public function setPort($port)
-    {
-        $this->port = $port;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPort()
-    {
-        return $this->port;
-    }
-
 
     /**
      * @param \Liuggio\StatsdClient\Sender\SenderInterface $sender
@@ -250,19 +207,4 @@ class StatsdClient implements StatsdClientInterface
         return $this->reducePacket;
     }
 
-    /**
-     * @param string $protocol
-     */
-    public function setProtocol($protocol)
-    {
-        $this->protocol = $protocol;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProtocol()
-    {
-        return $this->protocol;
-    }
 }
