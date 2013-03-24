@@ -20,5 +20,4 @@ Interface StatsdClientInterface
      * @return integer the data sent in bytes
      */
     function send($data, $sampleRate = 1);
-
 }
