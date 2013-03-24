@@ -1,7 +1,8 @@
 ## statsd-php-client v1.0.6
 
-[![Build Status](https://secure.travis-ci.org/liuggio/statsd-php-client.png)](http://travis-ci.org/liuggio/statsd-php-client)
+Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there's a BC.
 
+[![Build Status](https://secure.travis-ci.org/liuggio/statsd-php-client.png)](http://travis-ci.org/liuggio/statsd-php-client)
 
 `statsd-php-client` is an Open Source, and **Object Oriented** Client for **etsy/statsd** written in php
 
@@ -25,7 +26,6 @@
 
 - You do want to debug the packets, and using `SysLogSender` the packets will be logged in your `syslog` log (on debian-like distro: `tail -f /var/log/syslog`)
 
-Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4.
 
 ## Example
 
@@ -69,7 +69,6 @@ $client->send($data);
 In order to try this application monitor you have to install etsy/statsd and Graphite
 
 see this blog post to install it with vagrant [Easy install statsd graphite](http://welcometothebundle.com/easily-install-statsd-and-graphite-with-vagrant/).
-
 
 #### [StatsD](https://github.com/etsy/statsd)
 
