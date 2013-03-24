@@ -8,7 +8,8 @@ Class EchoSender implements SenderInterface
     /**
      * {@inheritDoc}
      */
-    public function open() {
+    public function open()
+    {
         echo "[open]";
         return true;
     }
@@ -16,7 +17,8 @@ Class EchoSender implements SenderInterface
     /**
      * {@inheritDoc}
      */
-    function write($handle, $message, $length = null){
+    function write($handle, $message, $length = null)
+    {
         echo "[$message]";
         return strlen($message);
     }
@@ -24,7 +26,8 @@ Class EchoSender implements SenderInterface
     /**
      * {@inheritDoc}
      */
-    function close($handle){
+    function close($handle)
+    {
         echo "[closed]";
     }
 }

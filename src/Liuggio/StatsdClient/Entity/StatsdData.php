@@ -4,7 +4,6 @@ namespace Liuggio\StatsdClient\Entity;
 
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 
-
 class StatsdData implements StatsdDataInterface
 {
 
@@ -56,6 +55,7 @@ class StatsdData implements StatsdDataInterface
     }
 
     /**
+     * @param bool $withMetric
      * @return string
      */
     public function getMessage($withMetric = true)
@@ -74,5 +74,4 @@ class StatsdData implements StatsdDataInterface
     {
         return $this->getMessage();
     }
-
 }
