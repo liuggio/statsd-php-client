@@ -6,26 +6,25 @@ Interface SenderInterface
 {
     /**
      * @abstract
-     * @param $hostname
-     * @param null $port
-     * @param null $protocol
      * @return mixed
      */
-    function open($hostname, $port = null, $protocol = null);
+    function open();
 
     /**
      * @abstract
      * @param $handle
      * @param $string
      * @param null $length
+     *
      * @return mixed
      */
-    function write($handle, $string, $length = null);
+     function write($handle, $string, $length = null);
 
     /**
      * @abstract
      * @param $handle
+     *
      * @return mixed
      */
-    function close($handle);
+     function close($handle);
 }

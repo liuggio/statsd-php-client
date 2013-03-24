@@ -4,7 +4,6 @@ namespace Liuggio\StatsdClient\Factory;
 
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 
-
 class StatsdDataFactory implements StatsdDataFactoryInterface
 {
     /**
@@ -86,7 +85,8 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     /**
      * {@inheritDoc}
      **/
-    public function produceStatsdDataEntity() {
+    public function produceStatsdDataEntity()
+    {
         $statsdData = $this->getEntityClass();
         return new $statsdData();
     }

@@ -10,7 +10,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
     public function mockSenderWithAssertionOnWrite($messageToAssert) {
 
-        $mock =  $this->getMock('\\Liuggio\\StatsdClient\\Sender\\SocketSender', array('open', 'write', 'close'));
+        $mock = $this->getMockBuilder('\Liuggio\StatsdClient\Sender\SocketSender') ->disableOriginalConstructor() ->getMock();
 
         $phpUnit = $this;
         $mock->expects($this->any())
@@ -33,7 +33,6 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
                 ->method('write')
                 ->will($this->returnCallBack(function($fp, $message) use ($phpUnit, $messageToAssert) {
                  $phpUnit->assertEquals($message, $messageToAssert);
-
             }));
         }
         return $mock;
@@ -43,13 +42,13 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $mockSender = $this->mockSenderWithAssertionOnWrite($messageToAssert);
 
-        $statsdClient = new StatsdClient($mockSender, 'localhost', 100, 'udp', false, false);
+        $statsdClient = new StatsdClient($mockSender, false, false);
         return $statsdClient;
     }
 
     public function mockFactory() {
 
-        $mock =  $this->getMock('\\Liuggio\\StatsdClient\\Factory\\StatsdDataFactory', array('timing'));
+        $mock =  $this->getMock('\Liuggio\StatsdClient\Factory\StatsdDataFactory', array('timing'));
 
         $statsData = new StatsdData();
         $statsData->setKey('key');
@@ -111,8 +110,6 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $statsdMock = $this->mockStatsdClientWithAssertionOnWrite($assertion);
         $statsdMock->send($statsdInput);
-
-        $this->assertTrue(true);
     }
 
     /**
@@ -122,8 +119,6 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $statsdMock = $this->mockStatsdClientWithAssertionOnWrite($assertion);
         $statsdMock->send($array);
-
-        $this->assertTrue(true);
     }
 
     public function testReduceCount()
@@ -141,7 +136,6 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $entity0->setValue('2');
         $entity0->setMetric('ms');
         $array0[] = $entity0;
-
 
         $reducedMessage = array('key1:1|c' . PHP_EOL . 'key2:2|ms');
 
