@@ -7,11 +7,11 @@ use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 class StatsdDataFactory implements StatsdDataFactoryInterface
 {
     /**
-     * @var \Liuggio\StatsdClient\Entity\StatsdDataInterface
+     * @var StatsdDataInterface
      */
     private $entityClass;
 
-    public function __construct($entity_class)
+    public function __construct($entity_class = '\Liuggio\StatsdClient\Entity\StatsdData')
     {
         $this->setEntityClass($entity_class);
     }
@@ -41,11 +41,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * This function creates a 'increment' StatsdData object
-     *
-     * @param string|array $key The metric(s) to increment.
-     * @param float|1 $sampleRate the rate (0-1) for sampling.
-     * @return array
+     * {@inheritDoc}
      **/
     public function increment($key)
     {

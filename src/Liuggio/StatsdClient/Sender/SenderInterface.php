@@ -6,15 +6,17 @@ Interface SenderInterface
 {
     /**
      * @abstract
+     *
      * @return mixed
      */
     function open();
 
     /**
      * @abstract
+     *
      * @param $handle
-     * @param $string
-     * @param null $length
+     * @param string $string
+     * @param null   $length
      *
      * @return mixed
      */
@@ -22,6 +24,7 @@ Interface SenderInterface
 
     /**
      * @abstract
+     *
      * @param $handle
      *
      * @return mixed
