@@ -56,6 +56,7 @@ class StatsdData implements StatsdDataInterface
 
     /**
      * @param bool $withMetric
+     *
      * @return string
      */
     public function getMessage($withMetric = true)

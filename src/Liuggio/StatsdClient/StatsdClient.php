@@ -27,12 +27,12 @@ class StatsdClient implements StatsdClientInterface
      * Constructor.
      *
      * @param \Liuggio\StatsdClient\Sender\SenderInterface $sender
-     * @param Boolean $reducePacket
-     * @param Boolean $fail_silently
+     * @param Boolean                                      $reducePacket
+     * @param Boolean                                      $fail_silently
      */
     public function __construct(SenderInterface $sender, $reducePacket = true, $fail_silently = true)
     {
-        $this->sender = $sender;
+        $this->sender       = $sender;
         $this->reducePacket = $reducePacket;
         $this->failSilently = $fail_silently;
     }
@@ -65,9 +65,9 @@ class StatsdClient implements StatsdClientInterface
     function doReduce($result, $item)
     {
         $oldLastItem = array_pop($result);
-        $sizeResult = strlen($oldLastItem);
-        $message = $item;
-        $totalSize = $sizeResult + strlen($message) + 1; //the comma is the 1
+        $sizeResult  = strlen($oldLastItem);
+        $message     = $item;
+        $totalSize   = $sizeResult + strlen($message) + 1; //the comma is the 1
 
         if (self::MAX_UDP_SIZE_STR < $totalSize) {
             //going to build another one
@@ -82,6 +82,7 @@ class StatsdClient implements StatsdClientInterface
             $oldLastItem = sprintf("%s%s%s", $oldLastItem, $separator, $message);
             array_push($result, $oldLastItem);
         }
+
         return $result;
     }
 
@@ -89,6 +90,7 @@ class StatsdClient implements StatsdClientInterface
      * this function reduce the amount of data that should be send
      *
      * @param $arrayData
+     *
      * @return $arrayData
      */
     public function reduceCount($arrayData)
@@ -96,6 +98,7 @@ class StatsdClient implements StatsdClientInterface
         if (is_array($arrayData)) {
             $arrayData = array_reduce($arrayData, "self::doReduce", array());
         }
+
         return $arrayData;
     }
 
@@ -104,7 +107,7 @@ class StatsdClient implements StatsdClientInterface
      *  Sampling 0.1
      *  Tells StatsD that this counter is being sent sampled every 1/10th of the time.
      *
-     * @param $data
+     * @param     $data
      * @param int $sampleRate
      */
     public function appendSampleRate($data, $sampleRate = 1)
@@ -116,6 +119,7 @@ class StatsdClient implements StatsdClientInterface
             }
             $data = $sampledData;
         }
+
         return $data;
     }
 
