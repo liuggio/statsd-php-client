@@ -84,6 +84,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     public function produceStatsdDataEntity()
     {
         $statsdData = $this->getEntityClass();
+
         return new $statsdData();
     }
 
