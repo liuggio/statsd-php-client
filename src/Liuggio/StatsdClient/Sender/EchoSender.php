@@ -11,6 +11,7 @@ Class EchoSender implements SenderInterface
     public function open()
     {
         echo "[open]";
+
         return true;
     }
 
@@ -20,6 +21,7 @@ Class EchoSender implements SenderInterface
     function write($handle, $message, $length = null)
     {
         echo "[$message]";
+
         return strlen($message);
     }
 

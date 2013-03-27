@@ -17,28 +17,24 @@ interface StatsdDataInterface
 
     /**
      * @abstract
-     *
      * @return mixed
      */
     function getValue();
 
     /**
      * @abstract
-     *
      * @return string
      */
     function getMetric();
 
     /**
      * @abstract
-     *
      * @return string
      */
     function getMessage();
 
     /**
      * @abstract
-     *
      * @return string
      */
     function __toString();
