@@ -1,4 +1,4 @@
-## statsd-php-client v1.0.6
+## statsd-php-client
 
 Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there's a BC.
 
