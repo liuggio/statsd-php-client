@@ -2,7 +2,7 @@
 
 Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there's a BC.
 
-[![Build Status](https://secure.travis-ci.org/liuggio/statsd-php-client.png)](http://travis-ci.org/liuggio/statsd-php-client)
+[![Build Status](https://secure.travis-ci.org/liuggio/statsd-php-client.png)](http://travis-ci.org/liuggio/statsd-php-client) [![Latest Stable Version](https://poser.pugx.org/liuggio/statsd-php-client/v/stable.png)](https://packagist.org/packages/liuggio/statsd-php-client) [![Total Downloads](https://poser.pugx.org/liuggio/statsd-php-client/downloads.png)](https://packagist.org/packages/liuggio/statsd-php-client)
 
 `statsd-php-client` is an Open Source, and **Object Oriented** Client for **etsy/statsd** written in php
 
