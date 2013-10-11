@@ -1,5 +1,5 @@
 {
-    "name": "liuggio/statsd-php-client",
+    "name": "p0gram3r/statsd-php-client",
     "description": "Statsd (Object Oriented) client library for PHP",
     "keywords": ["statsd", "monitoring", "etsy", "php"],
     "homepage": "http://github.com/liuggio/statsd-client",
