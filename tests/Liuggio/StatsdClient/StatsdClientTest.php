@@ -160,7 +160,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testReduceWithMaxUdpPacketSplittedInTwoPacket()
+    public function testReduceWithMaxUdpPacketSplitInTwoPacket()
     {
         $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
 
