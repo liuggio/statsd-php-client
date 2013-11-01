@@ -123,7 +123,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
     public function testReduceCount()
     {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
 
         $entity0 = new StatsdData();
         $entity0->setKey('key1');
@@ -139,13 +139,13 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $reducedMessage = array('key1:1|c' . PHP_EOL . 'key2:2|ms');
 
-        $this->assertEquals($statd->reduceCount($array0), $reducedMessage);
+        $this->assertEquals($statsd->reduceCount($array0), $reducedMessage);
 
     }
 
     public function testReduceWithString()
     {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
 
         $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789:';
         $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
@@ -154,7 +154,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $msg = 'B3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789:';
         $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
         $array0[] = $msg;
-        $reduced = $statd->reduceCount($array0);
+        $reduced = $statsd->reduceCount($array0);
         $combined = $array0[0] . PHP_EOL . $array0[1];
         $this->assertEquals($combined, $reduced[0]);
     }
@@ -162,7 +162,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
     public function testReduceWithMaxUdpPacketSplittedInTwoPacket()
     {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
 
         $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';    //1
         $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 '; //2
@@ -175,7 +175,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
         $array0[] = $msg;
 
-        $reduced = $statd->reduceCount($array0);
+        $reduced = $statsd->reduceCount($array0);
 
         $combined = $array0[0] . PHP_EOL . $array0[1];
 
