@@ -8,7 +8,7 @@ use Liuggio\StatsdClient\Exception\InvalidArgumentException;
 
 Interface StatsdClientInterface
 {
-    const MAX_UDP_SIZE_STR = 548;
+    const MAX_UDP_SIZE_STR = 512;
 
     /*
      * Send the metrics over UDP
