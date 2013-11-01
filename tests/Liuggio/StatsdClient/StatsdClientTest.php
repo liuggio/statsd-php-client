@@ -177,10 +177,31 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $reduced = $statsd->reduceCount($array0);
 
-        $combined = $array0[0] . PHP_EOL . $array0[1];
-
         $this->assertEquals($array0[1], $reduced[0]);
         $this->assertEquals($array0[0], $reduced[1]);
+    }
 
+
+
+    public function testMultiplePacketsWithReducing()
+    {
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
+
+        $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+
+        $total = count($array0) * strlen($msg);
+        $reducedPacketsAssertion = (int) ceil($total / StatsdClientInterface::MAX_UDP_SIZE_STR);
+
+        $reduced = $statsd->reduceCount($array0);
+
+        $this->assertEquals($reducedPacketsAssertion, count($reduced));
     }
 }
