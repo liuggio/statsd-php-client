@@ -8,10 +8,13 @@ use Liuggio\StatsdClient\Exception\InvalidArgumentException;
 
 Interface StatsdClientInterface
 {
+    /**
+     * @deprecated see PacketReducer constant
+     */
     const MAX_UDP_SIZE_STR = 512;
 
     /*
-     * Send the metrics over UDP
+     * Send the metrics
      *
      * @abstract
      * @param array|string|StatsdDataInterface  $data message(s) to sent
