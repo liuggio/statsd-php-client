@@ -123,7 +123,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
     public function testReduceCount()
     {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
 
         $entity0 = new StatsdData();
         $entity0->setKey('key1');
@@ -139,13 +139,13 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $reducedMessage = array('key1:1|c' . PHP_EOL . 'key2:2|ms');
 
-        $this->assertEquals($statd->reduceCount($array0), $reducedMessage);
+        $this->assertEquals($statsd->reduceCount($array0), $reducedMessage);
 
     }
 
     public function testReduceWithString()
     {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
 
         $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789:';
         $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
@@ -154,15 +154,15 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $msg = 'B3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789:';
         $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
         $array0[] = $msg;
-        $reduced = $statd->reduceCount($array0);
+        $reduced = $statsd->reduceCount($array0);
         $combined = $array0[0] . PHP_EOL . $array0[1];
         $this->assertEquals($combined, $reduced[0]);
     }
 
 
-    public function testReduceWithMaxUdpPacketSplittedInTwoPacket()
+    public function testReduceWithMaxUdpPacketSplitInTwoPacket()
     {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
 
         $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';    //1
         $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 '; //2
@@ -175,12 +175,72 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
         $array0[] = $msg;
 
-        $reduced = $statd->reduceCount($array0);
+        $reduced = $statsd->reduceCount($array0);
 
-        $combined = $array0[0] . PHP_EOL . $array0[1];
-
-        $this->assertEquals($array0[1], $reduced[0]);
-        $this->assertEquals($array0[0], $reduced[1]);
-
+        $this->assertEquals($array0, $reduced);
     }
+
+
+
+    public function testMultiplePacketsWithReducing()
+    {
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
+
+        $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+        $array0[] = $msg;
+
+        $total = count($array0) * strlen($msg);
+        $reducedPacketsAssertion = (int) ceil($total / StatsdClientInterface::MAX_UDP_SIZE_STR);
+
+        $reduced = $statsd->reduceCount($array0);
+
+        $this->assertEquals($reducedPacketsAssertion, count($reduced));
+    }
+
+    public function testPacketReducing()
+    {
+        $assertion = array();
+        $msg = '23456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';
+
+        $data[] = 'A'.$msg;
+        $assertion[0] = 'A'.$msg;
+        $data[] = 'B'. $msg;
+        $assertion[0] .= PHP_EOL . 'B'.$msg;
+        $data[] = 'C'.$msg;
+        $assertion[0] .= PHP_EOL . 'C'.$msg;
+        $data[] = 'D'.$msg;
+        $assertion[0] .= PHP_EOL . 'D'.$msg;
+        $data[] = 'E'.$msg;
+        $assertion[0] .= PHP_EOL . 'E'.$msg;
+
+        $data[] = 'F'.$msg;
+        $assertion[1] = 'F'.$msg;
+        $data[] = 'G'.$msg;
+        $assertion[1] .= PHP_EOL . 'G'.$msg;
+        $data[] = 'H'.$msg;
+        $assertion[1] .= PHP_EOL . 'H'.$msg;
+        $data[] = 'I'.$msg;
+        $assertion[1] .= PHP_EOL . 'I'.$msg;
+        $data[] = 'L'.$msg;
+        $assertion[1] .= PHP_EOL . 'L'.$msg;
+
+        $data[] = 'M'.$msg;
+        $assertion[2] = 'M'.$msg;
+        $data[] = 'N'.$msg;
+        $assertion[2] .= PHP_EOL . 'N'.$msg;
+
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
+
+        $reduced = $statsd->reduceCount($data);
+
+        $this->assertEquals($assertion, $reduced);
+    }
+
 }

@@ -65,14 +65,14 @@ class StatsdClient implements StatsdClientInterface
     function doReduce($result, $item)
     {
         $oldLastItem = array_pop($result);
-        $sizeResult  = strlen($oldLastItem);
-        $message     = $item;
-        $totalSize   = $sizeResult + strlen($message) + 1; //the comma is the 1
+        $sizeResult = strlen($oldLastItem);
+        $message = $item;
+        $totalSize = $sizeResult + strlen($message) + 1; //the newline is the 1
 
         if (self::MAX_UDP_SIZE_STR < $totalSize) {
             //going to build another one
-            array_push($result, $message);
             array_push($result, $oldLastItem);
+            array_push($result, $message);
         } else {
             //going to modifying the existing
             $separator = '';

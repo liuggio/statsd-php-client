@@ -14,7 +14,6 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         $sender = $this->mockSender();
         // $sender = new Sender();
 
-        // StatsdClient(SenderInterface $sender, $host = 'udp://localhost', $port = 8126, $reducePacket = true, $fail_silently = true)
         $client = new StatsdClient($sender);
         $factory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
 
@@ -36,8 +35,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         $sender = $this->mockSender();
         // $sender = new Sender();
 
-        // StatsdClient(SenderInterface $sender, $host = 'localhost', $port = 8126, $protocol='udp', $reducePacket = true, $fail_silently = true)
-        $client = new StatsdClient($sender, $host = 'localhost', $port = 8126, 'udp', $reducePacket = true, $fail_silently = true);
+        $client = new StatsdClient($sender);
  
         $data[] ="increment:1|c";
         $data[] ="set:value|s";
