@@ -16,6 +16,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->any())
             ->method('open')
             ->will($this->returnValue(true));
+
         // if the input is an array expects a call foreach item
         if (is_array($messageToAssert)) {
             $index = 0;
@@ -23,18 +24,19 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
                 $index++;
                 $mock->expects($this->at($index))
                     ->method('write')
-                    ->will($this->returnCallBack(function($fp, $message) use ($phpUnit, $oneMessage) {
-                      $phpUnit->assertEquals($message, $oneMessage);
-                }));
+                    ->with($this->anything(),
+                           $this->equalTo($oneMessage)
+                    );
             }
         } else if (null !== $messageToAssert){
             // if the input is a string expects only once
             $mock->expects($this->once())
                 ->method('write')
-                ->will($this->returnCallBack(function($fp, $message) use ($phpUnit, $messageToAssert) {
-                 $phpUnit->assertEquals($message, $messageToAssert);
-            }));
+                ->with($this->anything(),
+                    $this->equalTo($messageToAssert)
+                );
         }
+
         return $mock;
     }
 
@@ -42,7 +44,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $mockSender = $this->mockSenderWithAssertionOnWrite($messageToAssert);
 
-        $statsdClient = new StatsdClient($mockSender, false, false);
+        $statsdClient = new StatsdClient($mockSender, null, false);
         return $statsdClient;
     }
 
@@ -55,12 +57,9 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $statsData->setValue('1');
         $statsData->setMetric('ms');
 
-        $phpUnit = $this;
         $mock->expects($this->any())
             ->method('timing')
             ->will($this->returnValue($statsData));
-
-
 
         return $mock;
     }
@@ -95,6 +94,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
             array($stats1, array("keyTiming:1|ms", "keyIncrement:1|c")),
         );
     }
+
     public static function providerSend()
     {
         return array(
@@ -119,68 +119,5 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $statsdMock = $this->mockStatsdClientWithAssertionOnWrite($assertion);
         $statsdMock->send($array);
-    }
-
-    public function testReduceCount()
-    {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
-
-        $entity0 = new StatsdData();
-        $entity0->setKey('key1');
-        $entity0->setValue('1');
-        $entity0->setMetric('c');
-        $array0[] = $entity0;
-
-        $entity0 = new StatsdData();
-        $entity0->setKey('key2');
-        $entity0->setValue('2');
-        $entity0->setMetric('ms');
-        $array0[] = $entity0;
-
-        $reducedMessage = array('key1:1|c' . PHP_EOL . 'key2:2|ms');
-
-        $this->assertEquals($statd->reduceCount($array0), $reducedMessage);
-
-    }
-
-    public function testReduceWithString()
-    {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
-
-        $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789:';
-        $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
-        $array0[] = $msg;
-
-        $msg = 'B3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789:';
-        $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
-        $array0[] = $msg;
-        $reduced = $statd->reduceCount($array0);
-        $combined = $array0[0] . PHP_EOL . $array0[1];
-        $this->assertEquals($combined, $reduced[0]);
-    }
-
-
-    public function testReduceWithMaxUdpPacketSplittedInTwoPacket()
-    {
-        $statd = $this->mockStatsdClientWithAssertionOnWrite(null);
-
-        $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';    //1
-        $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 '; //2
-        $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 '; //3
-        $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 '; //4
-        $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c'; //500
-        $array0[] = $msg;
-
-        $msg = 'Bkey:';
-        $msg .= '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789|c';
-        $array0[] = $msg;
-
-        $reduced = $statd->reduceCount($array0);
-
-        $combined = $array0[0] . PHP_EOL . $array0[1];
-
-        $this->assertEquals($array0[1], $reduced[0]);
-        $this->assertEquals($array0[0], $reduced[1]);
-
     }
 }
