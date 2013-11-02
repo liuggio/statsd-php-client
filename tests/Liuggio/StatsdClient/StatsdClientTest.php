@@ -177,8 +177,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $reduced = $statsd->reduceCount($array0);
 
-        $this->assertEquals($array0[1], $reduced[0]);
-        $this->assertEquals($array0[0], $reduced[1]);
+        $this->assertEquals($array0, $reduced);
     }
 
 
@@ -204,4 +203,44 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($reducedPacketsAssertion, count($reduced));
     }
+
+    public function testPacketReducing()
+    {
+        $assertion = array();
+        $msg = '23456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';
+
+        $data[] = 'A'.$msg;
+        $assertion[0] = 'A'.$msg;
+        $data[] = 'B'. $msg;
+        $assertion[0] .= PHP_EOL . 'B'.$msg;
+        $data[] = 'C'.$msg;
+        $assertion[0] .= PHP_EOL . 'C'.$msg;
+        $data[] = 'D'.$msg;
+        $assertion[0] .= PHP_EOL . 'D'.$msg;
+        $data[] = 'E'.$msg;
+        $assertion[0] .= PHP_EOL . 'E'.$msg;
+
+        $data[] = 'F'.$msg;
+        $assertion[1] = 'F'.$msg;
+        $data[] = 'G'.$msg;
+        $assertion[1] .= PHP_EOL . 'G'.$msg;
+        $data[] = 'H'.$msg;
+        $assertion[1] .= PHP_EOL . 'H'.$msg;
+        $data[] = 'I'.$msg;
+        $assertion[1] .= PHP_EOL . 'I'.$msg;
+        $data[] = 'L'.$msg;
+        $assertion[1] .= PHP_EOL . 'L'.$msg;
+
+        $data[] = 'M'.$msg;
+        $assertion[2] = 'M'.$msg;
+        $data[] = 'N'.$msg;
+        $assertion[2] .= PHP_EOL . 'N'.$msg;
+
+        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
+
+        $reduced = $statsd->reduceCount($data);
+
+        $this->assertEquals($assertion, $reduced);
+    }
+
 }
