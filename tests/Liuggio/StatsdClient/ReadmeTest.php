@@ -5,6 +5,7 @@ namespace Liuggio\StatsdClient;
 use Liuggio\StatsdClient\StatsdClient;
 use Liuggio\StatsdClient\Factory\StatsdDataFactory;
 //use Liuggio\StatsdClient\Sender\SocketSender;
+//use Liuggio\StatsdClient\PacketReducer;
 
 
 class ReadmeTest extends \PHPUnit_Framework_TestCase
@@ -13,6 +14,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
 
         $sender = $this->mockSender();
         // $sender = new Sender();
+        // $sender = new PacketReducer($sender);
 
         $client = new StatsdClient($sender);
         $factory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
@@ -28,12 +30,11 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         $client->send($data);
     }
 
-
-
     public function testFullUsageArray() {
         
         $sender = $this->mockSender();
         // $sender = new Sender();
+        // $sender = new PacketReducer($sender);
 
         $client = new StatsdClient($sender);
  
@@ -48,14 +49,13 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         $client->send($data);
     }
 
-
     private function mockSender() {
         $sender =  $this->getMock('\Liuggio\StatsdClient\Sender\SenderInterface', array('open', 'write', 'close'));
         $sender->expects($this->once())
             ->method('open')
             ->will($this->returnValue(true));
 
-        $sender->expects($this->any())  //If you set the reduce = true into the StatsdClient the write will be called once
+        $sender->expects($this->any())
             ->method('write')
             ->will($this->returnCallBack(function($fp, $message) {
              //  echo PHP_EOL . "- " . $message;

@@ -35,11 +35,13 @@ Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there'
 
 2. create the Client
 
-3. create the Factory
+3. optional - decorate the client with the PacketReducer
 
-4. the Factory will help you to create data
+4. create the Factory
 
-5. the Client will send the data
+5. the Factory will help you to create data
+
+6. the Client will send the data
 
 ### Standard Usage
 
@@ -143,11 +145,16 @@ composer.phar install
 phpunit --coverage-html reports
 ```
 
-## Upgrade
+## Upgrading
 
 - BC from the v1.0.4 version, [see Sender and Client differences](https://github.com/liuggio/statsd-php-client/pull/5/files).
 
 - BC from the v1.0.* version:
   * The StatsdClientInterface::MAX_UDP_SIZE_STR is deprecated.
-  * The StastdClient::constructor permit only to parameters not 3, the boolean packet reducer has been removed, in favour
-    of the PacketReducer Class that act as decorator.
+  * The StastdClient::constructor permit only to parameters not 3, the boolean packet reducer has been removed,
+    in favour of the PacketReducer Class that act as decorator.
+  * The methods of StastdClient are not public
+     - setFailSilently
+     - getFailSilently
+     - setSender
+     - getSender

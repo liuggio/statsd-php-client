@@ -71,7 +71,7 @@ class StatsdClient implements StatsdClientInterface
     /**
      * @return boolean
      */
-    public function getFailSilently()
+    private function getFailSilently()
     {
         return $this->failSilently;
     }
@@ -79,7 +79,7 @@ class StatsdClient implements StatsdClientInterface
     /**
      * @param SenderInterface $sender
      */
-    public function setSender(SenderInterface $sender)
+    private function setSender(SenderInterface $sender)
     {
         $this->sender = $sender;
     }
@@ -87,7 +87,7 @@ class StatsdClient implements StatsdClientInterface
     /**
      * @return SenderInterface
      */
-    public function getSender()
+    private function getSender()
     {
         return $this->sender;
     }
