@@ -42,8 +42,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $mockSender = $this->mockSenderWithAssertionOnWrite($messageToAssert);
 
-        $statsdClient = new StatsdClient($mockSender, false, false);
-        return $statsdClient;
+        return new StatsdClient($mockSender, false, false);
     }
 
     public function mockFactory() {
@@ -203,5 +202,26 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $reduced = $statsd->reduceCount($array0);
 
         $this->assertEquals($reducedPacketsAssertion, count($reduced));
+    }
+
+    public function testSampleRate()
+    {
+        $senderMock = $this->getMock('Liuggio\StatsdClient\Sender\SenderInterface');
+        $senderMock
+            ->expects($this->once())
+            ->method('open')
+            ->will($this->returnValue(true))
+        ;
+        $senderMock
+            ->expects($this->once())
+            ->method('write')
+            ->with($this->anything(), 'foo|@0.2')
+        ;
+        $client = new StatsdClient($senderMock, false, false);
+
+        $client->send(
+            'foo',
+            0.2
+        );
     }
 }
