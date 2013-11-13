@@ -115,7 +115,7 @@ class StatsdClient implements StatsdClientInterface
         $sampledData = array();
         if ($sampleRate < 1) {
             foreach ($data as $key => $message) {
-                $sampledData[$key] = sprintf('%s|@%s' . $message . $sampleRate);
+                $sampledData[$key] = sprintf('%s|@%s', $message, $sampleRate);
             }
             $data = $sampledData;
         }
