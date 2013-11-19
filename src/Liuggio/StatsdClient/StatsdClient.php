@@ -62,7 +62,7 @@ class StatsdClient implements StatsdClientInterface
      *
      * @return array
      */
-    public function doReduce($reducedMetrics, $metric)
+    private static function doReduce($reducedMetrics, $metric)
     {
         $metricLength = strlen($metric);
         $lastReducedMetric = count($reducedMetrics) > 0 ? end($reducedMetrics) : null;
@@ -80,12 +80,13 @@ class StatsdClient implements StatsdClientInterface
         return $reducedMetrics;
     }
 
+
     /**
      * this function reduce the amount of data that should be send
      *
-     * @param $arrayData
+     * @param mixed $arrayData
      *
-     * @return $arrayData
+     * @return mixed $arrayData
      */
     public function reduceCount($arrayData)
     {
@@ -101,15 +102,17 @@ class StatsdClient implements StatsdClientInterface
      *  Sampling 0.1
      *  Tells StatsD that this counter is being sent sampled every 1/10th of the time.
      *
-     * @param     $data
-     * @param int $sampleRate
+     * @param mixed $data
+     * @param int   $sampleRate
+     *
+     * @return mixed $data
      */
     public function appendSampleRate($data, $sampleRate = 1)
     {
         $sampledData = array();
         if ($sampleRate < 1) {
             foreach ($data as $key => $message) {
-                $sampledData[$key] = sprintf('%s|@%s' . $message . $sampleRate);
+                $sampledData[$key] = sprintf('%s|@%s', $message, $sampleRate);
             }
             $data = $sampledData;
         }
