@@ -62,17 +62,17 @@ class StatsdClient implements StatsdClientInterface
      *
      * @return array
      */
-    function doReduce($result, $item)
+    private static function doReduce($result, $item)
     {
         $oldLastItem = array_pop($result);
-        $sizeResult  = strlen($oldLastItem);
-        $message     = $item;
-        $totalSize   = $sizeResult + strlen($message) + 1; //the comma is the 1
+        $sizeResult = strlen($oldLastItem);
+        $message = $item;
+        $totalSize = $sizeResult + strlen($message) + 1; //the newline is the 1
 
-        if (self::MAX_UDP_SIZE_STR < $totalSize) {
+        if (StatsdClientInterface::MAX_UDP_SIZE_STR < $totalSize) {
             //going to build another one
-            array_push($result, $message);
             array_push($result, $oldLastItem);
+            array_push($result, $message);
         } else {
             //going to modifying the existing
             $separator = '';
@@ -89,14 +89,14 @@ class StatsdClient implements StatsdClientInterface
     /**
      * this function reduce the amount of data that should be send
      *
-     * @param $arrayData
+     * @param mixed $arrayData
      *
-     * @return $arrayData
+     * @return mixed $arrayData
      */
     public function reduceCount($arrayData)
     {
         if (is_array($arrayData)) {
-            $arrayData = array_reduce($arrayData, "self::doReduce", array());
+            $arrayData = array_reduce($arrayData,"self::doReduce", array());
         }
 
         return $arrayData;
@@ -107,15 +107,17 @@ class StatsdClient implements StatsdClientInterface
      *  Sampling 0.1
      *  Tells StatsD that this counter is being sent sampled every 1/10th of the time.
      *
-     * @param     $data
-     * @param int $sampleRate
+     * @param mixed $data
+     * @param int   $sampleRate
+     *
+     * @return mixed $data
      */
     public function appendSampleRate($data, $sampleRate = 1)
     {
         $sampledData = array();
         if ($sampleRate < 1) {
             foreach ($data as $key => $message) {
-                $sampledData[$key] = sprintf('%s|@%s' . $message . $sampleRate);
+                $sampledData[$key] = sprintf('%s|@%s', $message, $sampleRate);
             }
             $data = $sampledData;
         }

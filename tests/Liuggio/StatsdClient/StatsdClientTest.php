@@ -8,7 +8,7 @@ use Liuggio\StatsdClient\Entity\StatsdData;
 class StatsdClientTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function mockSenderWithAssertionOnWrite($messageToAssert) {
+    public function mockSenderWithAssertionOnWrite($messageToAssert=null) {
 
         $mock = $this->getMockBuilder('\Liuggio\StatsdClient\Sender\SocketSender') ->disableOriginalConstructor() ->getMock();
 
@@ -42,8 +42,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $mockSender = $this->mockSenderWithAssertionOnWrite($messageToAssert);
 
-        $statsdClient = new StatsdClient($mockSender, false, false);
-        return $statsdClient;
+        return new StatsdClient($mockSender, false, false);
     }
 
     public function mockFactory() {
@@ -59,8 +58,6 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->any())
             ->method('timing')
             ->will($this->returnValue($statsData));
-
-
 
         return $mock;
     }
@@ -177,17 +174,16 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
         $reduced = $statsd->reduceCount($array0);
 
-        $this->assertEquals($array0[1], $reduced[0]);
-        $this->assertEquals($array0[0], $reduced[1]);
+        $this->assertEquals($array0[0], $reduced[0]);
+        $this->assertEquals($array0[1], $reduced[1]);
     }
 
 
 
     public function testMultiplePacketsWithReducing()
     {
-        $statsd = $this->mockStatsdClientWithAssertionOnWrite(null);
 
-        $msg = 'A3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';
+        $msg = 'A23456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789';
         $array0[] = $msg;
         $array0[] = $msg;
         $array0[] = $msg;
@@ -198,10 +194,35 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         $array0[] = $msg;
 
         $total = count($array0) * strlen($msg);
+
         $reducedPacketsAssertion = (int) ceil($total / StatsdClientInterface::MAX_UDP_SIZE_STR);
 
+
+        $mockSender = $this->mockSenderWithAssertionOnWrite();
+        $statsd = new  StatsdClient($mockSender, true, false);
         $reduced = $statsd->reduceCount($array0);
 
         $this->assertEquals($reducedPacketsAssertion, count($reduced));
+    }
+
+    public function testSampleRate()
+    {
+        $senderMock = $this->getMock('Liuggio\StatsdClient\Sender\SenderInterface');
+        $senderMock
+            ->expects($this->once())
+            ->method('open')
+            ->will($this->returnValue(true))
+        ;
+        $senderMock
+            ->expects($this->once())
+            ->method('write')
+            ->with($this->anything(), 'foo|@0.2')
+        ;
+        $client = new StatsdClient($senderMock, false, false);
+
+        $client->send(
+            'foo',
+            0.2
+        );
     }
 }
