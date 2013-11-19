@@ -57,33 +57,27 @@ class StatsdClient implements StatsdClientInterface
      * https://github.com/etsy/statsd/blob/master/README.md
      * All metrics can also be batch send in a single UDP packet, separated by a newline character.
      *
-     * @param array $result
-     * @param array $item
+     * @param array $reducedMetrics
+     * @param array $metric
      *
      * @return array
      */
-    function doReduce($result, $item)
+    public function doReduce($reducedMetrics, $metric)
     {
-        $oldLastItem = array_pop($result);
-        $sizeResult  = strlen($oldLastItem);
-        $message     = $item;
-        $totalSize   = $sizeResult + strlen($message) + 1; //the comma is the 1
+        $metricLength = strlen($metric);
+        $lastReducedMetric = count($reducedMetrics) > 0 ? end($reducedMetrics) : null;
 
-        if (self::MAX_UDP_SIZE_STR < $totalSize) {
-            //going to build another one
-            array_push($result, $message);
-            array_push($result, $oldLastItem);
+        if ($metricLength >= self::MAX_UDP_SIZE_STR
+            || null === $lastReducedMetric
+            || strlen($newMetric = $lastReducedMetric . "\n" . $metric) > self::MAX_UDP_SIZE_STR
+        ) {
+            $reducedMetrics[] = $metric;
         } else {
-            //going to modifying the existing
-            $separator = '';
-            if ($sizeResult > 0) {
-                $separator = PHP_EOL;
-            }
-            $oldLastItem = sprintf("%s%s%s", $oldLastItem, $separator, $message);
-            array_push($result, $oldLastItem);
+            array_pop($reducedMetrics);
+            $reducedMetrics[] = $newMetric;
         }
 
-        return $result;
+        return $reducedMetrics;
     }
 
     /**
