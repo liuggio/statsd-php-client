@@ -77,7 +77,7 @@ class StatsdClient implements StatsdClientInterface
             //going to modifying the existing
             $separator = '';
             if ($sizeResult > 0) {
-                $separator = PHP_EOL;
+                $separator = "\n";
             }
             $oldLastItem = sprintf("%s%s%s", $oldLastItem, $separator, $message);
             array_push($result, $oldLastItem);
