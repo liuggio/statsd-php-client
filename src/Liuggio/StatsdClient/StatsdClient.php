@@ -57,34 +57,29 @@ class StatsdClient implements StatsdClientInterface
      * https://github.com/etsy/statsd/blob/master/README.md
      * All metrics can also be batch send in a single UDP packet, separated by a newline character.
      *
-     * @param array $result
-     * @param array $item
+     * @param array $reducedMetrics
+     * @param array $metric
      *
      * @return array
      */
-    private static function doReduce($result, $item)
+    private static function doReduce($reducedMetrics, $metric)
     {
-        $oldLastItem = array_pop($result);
-        $sizeResult = strlen($oldLastItem);
-        $message = $item;
-        $totalSize = $sizeResult + strlen($message) + 1; //the newline is the 1
+        $metricLength = strlen($metric);
+        $lastReducedMetric = count($reducedMetrics) > 0 ? end($reducedMetrics) : null;
 
-        if (StatsdClientInterface::MAX_UDP_SIZE_STR < $totalSize) {
-            //going to build another one
-            array_push($result, $oldLastItem);
-            array_push($result, $message);
+        if ($metricLength >= self::MAX_UDP_SIZE_STR
+            || null === $lastReducedMetric
+            || strlen($newMetric = $lastReducedMetric . "\n" . $metric) > self::MAX_UDP_SIZE_STR
+        ) {
+            $reducedMetrics[] = $metric;
         } else {
-            //going to modifying the existing
-            $separator = '';
-            if ($sizeResult > 0) {
-                $separator = "\n";
-            }
-            $oldLastItem = sprintf("%s%s%s", $oldLastItem, $separator, $message);
-            array_push($result, $oldLastItem);
+            array_pop($reducedMetrics);
+            $reducedMetrics[] = $newMetric;
         }
 
-        return $result;
+        return $reducedMetrics;
     }
+
 
     /**
      * this function reduce the amount of data that should be send
@@ -96,7 +91,7 @@ class StatsdClient implements StatsdClientInterface
     public function reduceCount($arrayData)
     {
         if (is_array($arrayData)) {
-            $arrayData = array_reduce($arrayData,"self::doReduce", array());
+            $arrayData = array_reduce($arrayData, "self::doReduce", array());
         }
 
         return $arrayData;
