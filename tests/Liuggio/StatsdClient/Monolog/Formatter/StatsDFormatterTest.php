@@ -2,7 +2,6 @@
 
 namespace Liuggio\StatsdClient\Tests\Monolog\Formatter;
 
-use Monolog\Logger;
 use Liuggio\StatsdClient\Monolog\Formatter\StatsDFormatter;
 
 /**
@@ -163,7 +162,6 @@ class StatsDFormatterTest extends \PHPUnit_Framework_TestCase
             'doctrine.DEBUG.Notified-event.context.baz.qux');
 
         $this->assertEquals($assert, $message);
-
 
     }
 }

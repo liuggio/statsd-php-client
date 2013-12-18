@@ -5,7 +5,6 @@ namespace Liuggio\StatsdClient\Tests\Monolog\Handler;
 use Monolog\Logger;
 use Liuggio\StatsdClient\Monolog\Handler\StatsDHandler;
 
-
 class StatsDHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -46,11 +45,10 @@ class StatsDHandlerTest extends \PHPUnit_Framework_TestCase
         $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
         $formatter->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function($record) { return $record['message']; }));
+            ->will($this->returnCallback(function ($record) { return $record['message']; }));
 
         return $formatter;
     }
-
 
     protected function setup()
     {
@@ -66,7 +64,7 @@ class StatsDHandlerTest extends \PHPUnit_Framework_TestCase
 
         $factory->expects($this->any())
             ->method('increment')
-            ->will($this->returnCallback(function ($input){
+            ->will($this->returnCallback(function ($input) {
                 return sprintf('%s|c|1', $input);
             }));
 

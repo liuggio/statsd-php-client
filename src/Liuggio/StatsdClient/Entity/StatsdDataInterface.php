@@ -13,29 +13,29 @@ interface StatsdDataInterface
      * @abstract
      * @return string
      */
-    function getKey();
+    public function getKey();
 
     /**
      * @abstract
      * @return mixed
      */
-    function getValue();
+    public function getValue();
 
     /**
      * @abstract
      * @return string
      */
-    function getMetric();
+    public function getMetric();
 
     /**
      * @abstract
      * @return string
      */
-    function getMessage();
+    public function getMessage();
 
     /**
      * @abstract
      * @return string
      */
-    function __toString();
+    public function __toString();
 }

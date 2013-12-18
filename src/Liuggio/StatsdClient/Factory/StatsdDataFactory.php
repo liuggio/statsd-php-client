@@ -59,28 +59,6 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     /**
      * {@inheritDoc}
      **/
-    public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
-    {
-        $statsdData = $this->produceStatsdDataEntity();
-
-        if (null !== $key) {
-            $statsdData->setKey($key);
-        }
-
-        if (null !== $value) {
-            $statsdData->setValue($value);
-        }
-
-        if (null !== $metric) {
-            $statsdData->setMetric($metric);
-        }
-
-        return $statsdData;
-    }
-
-    /**
-     * {@inheritDoc}
-     **/
     public function produceStatsdDataEntity()
     {
         $statsdData = $this->getEntityClass();
@@ -118,5 +96,24 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     public function getEntityClass()
     {
         return $this->entityClass;
+    }
+
+    private function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
+    {
+        $statsdData = $this->produceStatsdDataEntity();
+
+        if (null !== $key) {
+            $statsdData->setKey($key);
+        }
+
+        if (null !== $value) {
+            $statsdData->setValue($value);
+        }
+
+        if (null !== $metric) {
+            $statsdData->setMetric($metric);
+        }
+
+        return $statsdData;
     }
 }

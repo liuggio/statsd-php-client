@@ -2,7 +2,6 @@
 
 namespace Liuggio\StatsdClient\Sender;
 
-
 Class SysLogSender implements SenderInterface
 {
     private $priority;
@@ -25,7 +24,7 @@ Class SysLogSender implements SenderInterface
     /**
      * {@inheritDoc}
      */
-    function write($handle, $message, $length = null)
+    public function write($handle, $message, $length = null)
     {
         syslog($this->priority, sprintf("statsd-client-write \"%s\" %d Bytes", $message, strlen($message)));
 
@@ -35,7 +34,7 @@ Class SysLogSender implements SenderInterface
     /**
      * {@inheritDoc}
      */
-    function close($handle)
+    public function close($handle)
     {
         syslog($this->priority, "statsd-client-close");
     }

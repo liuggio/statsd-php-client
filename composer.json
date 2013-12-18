@@ -22,5 +22,10 @@
     },
     "suggest": {
         "monolog/monolog": "Monolog, in order to do generate statistic from log >=1.2.0)"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
     }
 }

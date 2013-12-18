@@ -55,7 +55,6 @@ Class SocketSender implements SenderInterface
         socket_close($handle);
     }
 
-
     protected function setHost($host)
     {
         $this->host = $host;

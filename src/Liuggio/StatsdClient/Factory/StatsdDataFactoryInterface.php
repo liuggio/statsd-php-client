@@ -2,33 +2,30 @@
 
 namespace Liuggio\StatsdClient\Factory;
 
-use Liuggio\StatsdClient\Entity\StatsdDataInterface;
-
 Interface StatsdDataFactoryInterface
 {
-
     /**
-     * This function creates a 'timing' StatsdData.
+     * This public function creates a 'timing' StatsdData.
      *
      * @abstract
      *
      * @param string|array $key  The metric(s) to set.
      * @param float        $time The elapsed time (ms) to log
      **/
-    function timing($key, $time);
+    public function timing($key, $time);
 
     /**
-     * This function creates a 'gauge' StatsdData.
+     * This public function creates a 'gauge' StatsdData.
      *
      * @abstract
      *
      * @param string|array $key   The metric(s) to set.
      * @param float        $value The value for the stats.
      **/
-    function gauge($key, $value);
+    public function gauge($key, $value);
 
     /**
-     * This function creates a 'set' StatsdData object
+     * This public function creates a 'set' StatsdData object
      * A "Set" is a count of unique events.
      * This data type acts like a counter, but supports counting
      * of unique occurrences of values between flushes. The backend
@@ -41,15 +38,15 @@ Interface StatsdDataFactoryInterface
      *
      * @abstract
      *
-     * @param  string|array $key   The metric(s) to set.
-     * @param  float        $value The value for the stats.
+     * @param string|array $key   The metric(s) to set.
+     * @param float        $value The value for the stats.
      *
      * @return array
      **/
-    function set($key, $value);
+    public function set($key, $value);
 
     /**
-     * This function creates a 'increment' StatsdData object.
+     * This public function creates a 'increment' StatsdData object.
      *
      * @abstract
      *
@@ -58,10 +55,10 @@ Interface StatsdDataFactoryInterface
      *
      * @return array
      **/
-    function increment($key);
+    public function increment($key);
 
     /**
-     * This function creates a 'decrement' StatsdData object.
+     * This public function creates a 'decrement' StatsdData object.
      *
      * @abstract
      *
@@ -70,18 +67,6 @@ Interface StatsdDataFactoryInterface
      *
      * @return mixed
      **/
-    function decrement($key);
+    public function decrement($key);
 
-    /**
-     * Produce a StatsdDataInterface Object.
-     *
-     * @abstract
-     *
-     * @param string $key    The key of the metric
-     * @param int    $value  The amount to increment/decrement each metric by.
-     * @param string $metric The metric type ("c" for count, "ms" for timing, "g" for gauge, "s" for set)
-     *
-     * @return StatsdDataInterface
-     **/
-    function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT);
 }
