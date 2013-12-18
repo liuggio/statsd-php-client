@@ -56,4 +56,3 @@ $sendHandler->gauge('gaugor', 333);
 $sendHandler->set('uniques', 765);
 // $sendHandler->send(); this function doesn't do anything.
 echo "----------------".PHP_EOL;
-echo "closing";

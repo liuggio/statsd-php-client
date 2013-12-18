@@ -38,8 +38,8 @@ Interface StatsdDataFactoryInterface
      *
      * @abstract
      *
-     * @param string|array $key   The metric(s) to set.
-     * @param float        $value The value for the stats.
+     * @param  string|array $key   The metric(s) to set.
+     * @param  float        $value The value for the stats.
      *
      * @return array
      **/
@@ -68,5 +68,4 @@ Interface StatsdDataFactoryInterface
      * @return mixed
      **/
     public function decrement($key);
-
 }

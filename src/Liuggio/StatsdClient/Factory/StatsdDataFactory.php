@@ -98,7 +98,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
         return $this->entityClass;
     }
 
-    private function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
+    protected function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
     {
         $statsdData = $this->produceStatsdDataEntity();
 
