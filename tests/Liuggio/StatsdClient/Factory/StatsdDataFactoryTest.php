@@ -13,16 +13,6 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->statsDataFactory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
     }
 
-    public function testProduceStatsdData()
-    {
-        $key = 'key';
-        $value='val';
-
-        $obj = $this->statsDataFactory->produceStatsdData($key, $value);
-        $this->assertEquals($key, $obj->getKey());
-        $this->assertEquals($value, $obj->getValue());
-    }
-
     public function testTiming()
     {
         $key = 'key';
@@ -35,13 +25,13 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('ms', $obj->getMetric());
     }
 
-    public function testProduceStatsdDataDecrement()
+    public function testDecrement()
     {
         $key = 'key';
         $value = -1;
         $stringValue = intval($value);
 
-        $obj = $this->statsDataFactory->produceStatsdData($key, $value);
+        $obj = $this->statsDataFactory->decrement($key);
         $this->assertEquals($key, $obj->getKey());
         $this->assertEquals($stringValue, $obj->getValue());
         $this->assertEquals('c', $obj->getMetric());
@@ -59,19 +49,7 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('g', $obj->getMetric());
     }
 
-    public function testDecrement()
-    {
-        $key = 'key';
-        $value = -1;
-        $stringValue = intval($value);
-
-        $obj = $this->statsDataFactory->decrement($key);
-        $this->assertEquals($key, $obj->getKey());
-        $this->assertEquals($stringValue, $obj->getValue());
-        $this->assertEquals('c', $obj->getMetric());
-    }
-
-    public function testcreateStatsdDataIncrement()
+    public function testIncrement()
     {
         $key = 'key';
         $value = 1;

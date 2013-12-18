@@ -7,11 +7,10 @@ use Liuggio\StatsdClient\Factory\StatsdDataFactory;
 //use Liuggio\StatsdClient\Sender\SocketSender;
 //use Liuggio\StatsdClient\PacketReducer;
 
-
 class ReadmeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFullUsageWithObject() {
-
+    public function testFullUsageWithObject()
+    {
         $sender = $this->mockSender();
         // $sender = new Sender();
         // $sender = new PacketReducer($sender);
@@ -30,26 +29,27 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         $client->send($data);
     }
 
-    public function testFullUsageArray() {
-        
+    public function testFullUsageArray()
+    {
         $sender = $this->mockSender();
         // $sender = new Sender();
         // $sender = new PacketReducer($sender);
 
         $client = new StatsdClient($sender);
- 
+
         $data[] ="increment:1|c";
         $data[] ="set:value|s";
         $data[] ="gauge:value|g";
         $data[] = "timing:10|ms";
         $data[] = "decrement:-1|c";
-        $data[] ="key:1|c";         
+        $data[] ="key:1|c";
 
         // send the data as array or directly as object
         $client->send($data);
     }
 
-    private function mockSender() {
+    private function mockSender()
+    {
         $sender =  $this->getMock('\Liuggio\StatsdClient\Sender\SenderInterface', array('open', 'write', 'close'));
         $sender->expects($this->once())
             ->method('open')
@@ -57,7 +57,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
 
         $sender->expects($this->any())
             ->method('write')
-            ->will($this->returnCallBack(function($fp, $message) {
+            ->will($this->returnCallBack(function ($fp, $message) {
              //  echo PHP_EOL . "- " . $message;
         }));
 

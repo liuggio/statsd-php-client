@@ -3,6 +3,7 @@
 namespace Liuggio\StatsdClient;
 
 use Liuggio\StatsdClient\StatsdClientInterface;
+use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 
 /**
  * This is a decorator the StatsdClientInterface
@@ -38,13 +39,10 @@ class PacketReducer implements StatsdClientInterface
      */
     private static $packetSize = self::MAX_UDP_SIZE_COMMODITY;
 
-
-    public function __construct(StatsdClientInterface $client, $packetSize = null)
+    public function __construct(StatsdClientInterface $client, $packetSize = self::MAX_UDP_SIZE_COMMODITY)
     {
         $this->client = $client;
-        if (null !== $packetSize) {
-            self::$packetSize = $packetSize;
-        }
+        self::$packetSize = $packetSize;
     }
 
     /**
@@ -53,33 +51,27 @@ class PacketReducer implements StatsdClientInterface
      * https://github.com/etsy/statsd/blob/master/README.md
      * All metrics can also be batch send in a single UDP packet, separated by a newline character.
      *
-     * @param array $result
-     * @param array $item
+     * @param array $reducedMetrics
+     * @param array $metric
      *
      * @return array
      */
-    private static function doReduce($result, $item)
+    private static function doReduce($reducedMetrics, $metric)
     {
-        $oldLastItem = array_pop($result);
-        $sizeResult  = strlen($oldLastItem);
-        $message     = $item;
-        $totalSize   = $sizeResult + strlen($message) + 1; //the newline is the 1
+        $metricLength = strlen($metric);
+        $lastReducedMetric = count($reducedMetrics) > 0 ? end($reducedMetrics) : null;
 
-        if (self::$packetSize < $totalSize) {
-            //going to build another one
-            array_push($result, $oldLastItem);
-            array_push($result, $message);
+        if ($metricLength >= self::$packetSize
+            || null === $lastReducedMetric
+            || strlen($newMetric = $lastReducedMetric . "\n" . $metric) > self::$packetSize
+        ) {
+            $reducedMetrics[] = $metric;
         } else {
-            //going to modifying the existing
-            $separator = '';
-            if ($sizeResult > 0) {
-                $separator = PHP_EOL;
-            }
-            $oldLastItem = sprintf("%s%s%s", $oldLastItem, $separator, $message);
-            array_push($result, $oldLastItem);
+            array_pop($reducedMetrics);
+            $reducedMetrics[] = $newMetric;
         }
 
-        return $result;
+        return $reducedMetrics;
     }
 
     /*
@@ -89,10 +81,13 @@ class PacketReducer implements StatsdClientInterface
     */
     public function send($data, $sampleRate = 1)
     {
-        $data = $this->normalizeData($data);
+        if (null===$data || (is_array($data) && count($data)==0)) {
+            return 0;
+        }
 
+        $data = $this->normalizeData($data);
         if (is_array($data)) {
-            $data = array_reduce($data,"self::doReduce", array());
+            $data = array_reduce($data, "self::doReduce", array());
         }
 
         return $this->client->send($data, $sampleRate);
@@ -109,13 +104,12 @@ class PacketReducer implements StatsdClientInterface
     {
         // check format
         if ($data instanceof StatsdDataInterface || is_string($data)) {
-            $data = array($data);
+            return array($data);
         }
-        if (!is_array($data) || empty($data)) {
-            return;
+        if (is_array($data) && !empty($data)) {
+            return $data;
         }
 
-        return $data;
+        return null;
     }
-
 }

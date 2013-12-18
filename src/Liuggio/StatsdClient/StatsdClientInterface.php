@@ -2,10 +2,6 @@
 
 namespace Liuggio\StatsdClient;
 
-use Liuggio\StatsdClient\Sender\SenderInterface;
-use Liuggio\StatsdClient\Entity\StatsdDataInterface;
-use Liuggio\StatsdClient\Exception\InvalidArgumentException;
-
 Interface StatsdClientInterface
 {
     /**
@@ -17,10 +13,10 @@ Interface StatsdClientInterface
      * Send the metrics
      *
      * @abstract
-     * @param array|string|StatsdDataInterface  $data message(s) to sent
-     * @param int $sampleRate Tells StatsD that this counter is being sent sampled every Xth of the time.
+     * @param array|string|\Liuggio\StatsdClient\Sender\StatsdDataInterface $data       message(s) to sent
+     * @param int                                                           $sampleRate Tells StatsD that this counter is being sent sampled every Xth of the time.
      *
      * @return integer the data sent in bytes
      */
-    function send($data, $sampleRate = 1);
+    public function send($data, $sampleRate = 1);
 }

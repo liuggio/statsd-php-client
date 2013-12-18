@@ -81,7 +81,6 @@ class PacketReducerTest extends \PHPUnit_Framework_TestCase
         $reducer = new PacketReducer($mock);
         $reducer->send($data);
     }
-
     public function testMultiplePacketsWithReducing()
     {
         $assertion = array();
@@ -114,6 +113,23 @@ class PacketReducerTest extends \PHPUnit_Framework_TestCase
         $data[] = 'N'.$msg;
         $assertion[2] .= PHP_EOL . 'N'.$msg;
 
+        $mock = $this->getMockClient();
+        $mock->expects($this->any())
+            ->method('send')
+            ->with($this->equalTo($assertion));
+        $reducer = new PacketReducer($mock);
+
+        $reducer->send($data);
+    }
+
+    public function testSingleStatsdData()
+    {
+        $data = new StatsdData();
+        $data->setKey('key');
+        $data->setMetric(\Liuggio\StatsdClient\Entity\StatsdDataInterface::STATSD_METRIC_TIMING);
+        $data->setValue(2);
+
+        $assertion = array($data);
 
         $mock = $this->getMockClient();
         $mock->expects($this->any())

@@ -36,6 +36,10 @@ class StatsdClient implements StatsdClientInterface
      */
     public function send($data, $sampleRate = 1)
     {
+        if (null===$data || (is_array($data) && count($data)==0)) {
+            return 0;
+        }
+
         $data = $this->normalizeData($data);
 
         // add sampling
@@ -77,14 +81,6 @@ class StatsdClient implements StatsdClientInterface
     }
 
     /**
-     * @param SenderInterface $sender
-     */
-    private function setSender(SenderInterface $sender)
-    {
-        $this->sender = $sender;
-    }
-
-    /**
      * @return SenderInterface
      */
     private function getSender()
@@ -115,7 +111,6 @@ class StatsdClient implements StatsdClientInterface
         return $data;
     }
 
-
     /**
      * Transform all the data given into an array.
      *
@@ -127,13 +122,13 @@ class StatsdClient implements StatsdClientInterface
     {
         // check format
         if ($data instanceof StatsdDataInterface || is_string($data)) {
-            $data = array($data);
+            return array($data);
         }
-        if (!is_array($data) || empty($data)) {
-            return;
+        if (is_array($data) && !empty($data)) {
+            return $data;
         }
 
-        return $data;
+        return null;
     }
 
     /**

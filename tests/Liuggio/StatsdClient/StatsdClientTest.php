@@ -8,8 +8,8 @@ use Liuggio\StatsdClient\Entity\StatsdData;
 class StatsdClientTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function mockSenderWithAssertionOnWrite($messageToAssert) {
-
+    public function mockSenderWithAssertionOnWrite($messageToAssert)
+    {
         $mock = $this->getMockBuilder('\Liuggio\StatsdClient\Sender\SocketSender') ->disableOriginalConstructor() ->getMock();
 
         $phpUnit = $this;
@@ -28,7 +28,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
                            $this->equalTo($oneMessage)
                     );
             }
-        } else if (null !== $messageToAssert){
+        } elseif (null !== $messageToAssert) {
             // if the input is a string expects only once
             $mock->expects($this->once())
                 ->method('write')
@@ -40,16 +40,17 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
         return $mock;
     }
 
-    public function mockStatsdClientWithAssertionOnWrite($messageToAssert) {
-
+    public function mockStatsdClientWithAssertionOnWrite($messageToAssert)
+    {
         $mockSender = $this->mockSenderWithAssertionOnWrite($messageToAssert);
 
         $statsdClient = new StatsdClient($mockSender, null, false);
+
         return $statsdClient;
     }
 
-    public function mockFactory() {
-
+    public function mockFactory()
+    {
         $mock =  $this->getMock('\Liuggio\StatsdClient\Factory\StatsdDataFactory', array('timing'));
 
         $statsData = new StatsdData();
@@ -106,8 +107,8 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provider
      */
-    public function testPrepareAndSend($statsdInput, $assertion) {
-
+    public function testPrepareAndSend($statsdInput, $assertion)
+    {
         $statsdMock = $this->mockStatsdClientWithAssertionOnWrite($assertion);
         $statsdMock->send($statsdInput);
     }
@@ -115,8 +116,8 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerSend
      */
-    public function testSend($array, $assertion) {
-
+    public function testSend($array, $assertion)
+    {
         $statsdMock = $this->mockStatsdClientWithAssertionOnWrite($assertion);
         $statsdMock->send($array);
     }
