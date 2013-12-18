@@ -62,22 +62,22 @@ class StatsdClient implements StatsdClientInterface
      *
      * @return array
      */
-    private static function doReduce($result, $item)
+    function doReduce($result, $item)
     {
         $oldLastItem = array_pop($result);
-        $sizeResult = strlen($oldLastItem);
-        $message = $item;
-        $totalSize = $sizeResult + strlen($message) + 1; //the newline is the 1
+        $sizeResult  = strlen($oldLastItem);
+        $message     = $item;
+        $totalSize   = $sizeResult + strlen($message) + 1; //the comma is the 1
 
-        if (StatsdClientInterface::MAX_UDP_SIZE_STR < $totalSize) {
+        if (self::MAX_UDP_SIZE_STR < $totalSize) {
             //going to build another one
-            array_push($result, $oldLastItem);
             array_push($result, $message);
+            array_push($result, $oldLastItem);
         } else {
             //going to modifying the existing
             $separator = '';
             if ($sizeResult > 0) {
-                $separator = "\n";
+                $separator = PHP_EOL;
             }
             $oldLastItem = sprintf("%s%s%s", $oldLastItem, $separator, $message);
             array_push($result, $oldLastItem);
@@ -89,14 +89,14 @@ class StatsdClient implements StatsdClientInterface
     /**
      * this function reduce the amount of data that should be send
      *
-     * @param mixed $arrayData
+     * @param $arrayData
      *
-     * @return mixed $arrayData
+     * @return $arrayData
      */
     public function reduceCount($arrayData)
     {
         if (is_array($arrayData)) {
-            $arrayData = array_reduce($arrayData,"self::doReduce", array());
+            $arrayData = array_reduce($arrayData, "self::doReduce", array());
         }
 
         return $arrayData;
@@ -107,17 +107,15 @@ class StatsdClient implements StatsdClientInterface
      *  Sampling 0.1
      *  Tells StatsD that this counter is being sent sampled every 1/10th of the time.
      *
-     * @param mixed $data
-     * @param int   $sampleRate
-     *
-     * @return mixed $data
+     * @param     $data
+     * @param int $sampleRate
      */
     public function appendSampleRate($data, $sampleRate = 1)
     {
         $sampledData = array();
         if ($sampleRate < 1) {
             foreach ($data as $key => $message) {
-                $sampledData[$key] = sprintf('%s|@%s', $message, $sampleRate);
+                $sampledData[$key] = sprintf('%s|@%s' . $message . $sampleRate);
             }
             $data = $sampledData;
         }
