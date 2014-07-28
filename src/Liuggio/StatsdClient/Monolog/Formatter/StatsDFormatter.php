@@ -22,9 +22,9 @@ class StatsDFormatter extends LineFormatter
     protected $logExtra;
 
     /**
-     * @param string $format The format of the message
-     * @param Boolean $logContext If true add multiple rows containing Context information
-     * @param Boolean $logExtra If true add multiple rows containing Extra information
+     * @param string  $format        The format of the message
+     * @param Boolean $logContext    If true add multiple rows containing Context information
+     * @param Boolean $logExtra      If true add multiple rows containing Extra information
      * @param integer $numberOfWords The number of words to show.
      */
     public function __construct($format = null, $logContext = true, $logExtra = true, $numberOfWords = 2)

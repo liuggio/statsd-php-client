@@ -5,13 +5,12 @@ namespace Liuggio\StatsdClient\Sender;
 Interface SenderInterface
 {
     /**
-     * @abstract
+     *
      * @return mixed
      */
-    function open();
+    public function open();
 
     /**
-     * @abstract
      *
      * @param        $handle
      * @param string $string
@@ -19,14 +18,13 @@ Interface SenderInterface
      *
      * @return mixed
      */
-    function write($handle, $string, $length = null);
+    public function write($handle, $string, $length = null);
 
     /**
-     * @abstract
      *
      * @param $handle
      *
      * @return mixed
      */
-    function close($handle);
+    public function close($handle);
 }

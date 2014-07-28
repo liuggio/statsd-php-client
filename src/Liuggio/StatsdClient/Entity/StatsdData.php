@@ -6,7 +6,6 @@ use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 
 class StatsdData implements StatsdDataInterface
 {
-
     private $key;
     private $value;
     private $metric;
@@ -42,7 +41,6 @@ class StatsdData implements StatsdDataInterface
     {
         return $this->value;
     }
-
 
     public function setMetric($metric)
     {

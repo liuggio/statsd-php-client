@@ -1,6 +1,6 @@
 ## statsd-php-client
 
-Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there's a BC.
+Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there's a BC, and for  1.0.*
 
 [![Build Status](https://secure.travis-ci.org/liuggio/statsd-php-client.png)](http://travis-ci.org/liuggio/statsd-php-client) [![Latest Stable Version](https://poser.pugx.org/liuggio/statsd-php-client/v/stable.png)](https://packagist.org/packages/liuggio/statsd-php-client) [![Total Downloads](https://poser.pugx.org/liuggio/statsd-php-client/downloads.png)](https://packagist.org/packages/liuggio/statsd-php-client)
 
@@ -12,11 +12,13 @@ Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there'
 
 - `StatsdClient` sends the created objects via the `Sender` to the server
 
+- `Handler` could be
+
 ## Why use this library instead the [statsd/php-example](https://github.com/etsy/statsd/blob/master/examples/php-example.php)?
 
 - You are wise.
 
-- You could also use monolog to redirect data to statsd
+- You could also use monolog to redirect data to StatsD
 
 - This library is tested.
 
@@ -28,18 +30,24 @@ Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there'
 
 - You do want to debug the packets, and using `SysLogSender` the packets will be logged in your `syslog` log (on debian-like distro: `tail -f /var/log/syslog`)
 
-
 ## Example
 
-1. create the Sender
+``` php
+$sender = new EchoSender();                 // new sender dumping to the standard output.
+//$sender = SocketSender('localhost', 8126) // new sender using socket.
+$client = new StatsdClient($sender);        // the client uses the sender to send data
+// add client decorator to reduce packets.
+$client = new PacketReducer($client);       // the decorator reduces the packet to send
+$factory = new StatsdDataFactory();         // the factory create the packet
 
-2. create the Client
-
-3. create the Factory
-
-4. the Factory will help you to create data
-
-5. the Client will send the data
+$sendHandler = new SendHandler($client, $factory); // the Handler will create and send the data
+$sendHandler->timing('usageTime', 100);     // create the timing object and send it.
+// ...
+$bufferHandler = new BufferHandler($client, $factory); // this handler will buffer the data
+$bufferHandler->timing('usageTime', 100);   // create and buffers the data
+// ...
+$bufferHandler->send();                     // sends all the buffered data
+```
 
 ### Standard Usage
 
@@ -47,12 +55,15 @@ Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there'
 use Liuggio\StatsdClient\StatsdClient,
     Liuggio\StatsdClient\Factory\StatsdDataFactory,
     Liuggio\StatsdClient\Sender\SocketSender;
+// use Liuggio\StatsdClient\PacketReducer;
 // use Liuggio\StatsdClient\Sender\SysLogSender;
 
 $sender = new SocketSender(/*'localhost', 8126, 'udp'*/);
 // $sender = new SysLogSender(); // enabling this, the packet will not send over the socket
 
 $client = new StatsdClient($sender);
+// $client = new PacketReducer($client); // if you want to compose socket packets with multi metric
+
 $factory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
 
 // create the data with the factory
@@ -66,40 +77,18 @@ $data[] = $factory->set('uniques', 765);
 $client->send($data);
 ```
 
+more info at [example.php](src/example/example.php)
+
 ### Usage with Monolog
 
-```php
-use Liuggio\StatsdClient\StatsdClient,
-    Liuggio\StatsdClient\Factory\StatsdDataFactory,
-    Liuggio\StatsdClient\Sender\SocketSender;
-// use Liuggio\StatsdClient\Sender\SysLogSender;
-
-use Monolog\Logger;
-use Liuggio\StatsdClient\Monolog\Handler\StatsDHandler;
-
-$sender = new SocketSender(/*'localhost', 8126, 'udp'*/);
-// $sender = new SysLogSender(); // enabling this, the packet will not send over the socket
-$client = new StatsdClient($sender);
-$factory = new StatsdDataFactory();
-
-$logger = new Logger('my_logger');
-$logger->pushHandler(new StatsDHandler($client, $factory, 'prefix', Logger::DEBUG));
-
-$logger->addInfo('My logger is now ready');
-```
-
-the output will be:  `prefix.my_logger.INFO.My-logger:1|c" 36 Bytes`
-
-
-
+please have a look to [example with monolog.php](src/example/monolog.php)
 
 ## Short Theory
 
-### Easily Install StatSD and Graphite
+### Easily Install StatsD and Graphite
 
-In order to try this application monitor you have to install etsy/statsd and Graphite
-
-see this blog post to install it with vagrant [Easy install statsd graphite](http://welcometothebundle.com/easily-install-statsd-and-graphite-with-vagrant/).
+There are a lot of resources on internet on how to install etsy/statsd and Graphite,
+eg. [Easy install statsd graphite](http://welcometothebundle.com/easily-install-statsd-and-graphite-with-vagrant/).
 
 #### [StatsD](https://github.com/etsy/statsd)
 
@@ -139,11 +128,18 @@ composer.phar install
 phpunit --coverage-html reports
 ```
 
-## Upgrade
+## Upgrading
 
-BC from the v1.0.4 version, [see Sender and Client differences](https://github.com/liuggio/statsd-php-client/pull/5/files).
+- BC from the v1.0.4 version, [see Sender and Client differences](https://github.com/liuggio/statsd-php-client/pull/5/files).
 
-
-## TODO
-
-example with monolog
+- BC from the v1.0.* version:
+  * The StatsdClientInterface::MAX_UDP_SIZE_STR is deprecated.
+  * The StastdClient::constructor permit only to parameters not 3, the boolean packet reducer has been removed,
+    in favour of the PacketReducer Class that act as decorator.
+  * The methods of StastdClient are not public anymore:
+     - setFailSilently
+     - getFailSilently
+     - setSender
+     - getSender
+  * The Factory\StatsdDataFactoryInterface::produceStatsdData has been removed
+  * The Factory\StatsdDataFactory::produceStatsdData has been marked as protected
