@@ -83,4 +83,15 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('c', $obj->getMetric());
     }
 
+    public function testCreateStatsdDataUpdateCount()
+    {
+        $key = 'key';
+        $value = 10;
+        $stringValue = intval($value);
+
+        $obj = $this->statsDataFactory->updateCount($key, 10);
+        $this->assertEquals($key, $obj->getKey());
+        $this->assertEquals($stringValue, $obj->getValue());
+        $this->assertEquals('c', $obj->getMetric());
+    }
 }
