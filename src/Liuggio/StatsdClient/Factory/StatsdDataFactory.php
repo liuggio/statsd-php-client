@@ -59,6 +59,14 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     /**
      * {@inheritDoc}
      **/
+    public function updateCount($key, $delta)
+    {
+        return $this->produceStatsdData($key, $delta, StatsdDataInterface::STATSD_METRIC_COUNT);
+    }
+
+    /**
+     * {@inheritDoc}
+     **/
     public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
     {
         $statsdData = $this->produceStatsdDataEntity();

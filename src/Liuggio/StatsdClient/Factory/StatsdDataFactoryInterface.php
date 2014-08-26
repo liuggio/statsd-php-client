@@ -73,6 +73,18 @@ Interface StatsdDataFactoryInterface
     function decrement($key);
 
     /**
+     * This function creates a 'updateCount' StatsdData object.
+     *
+     * @abstract
+     *
+     * @param string|array $key        The metric(s) to decrement.
+     * @param integer      $delta      The delta to add to the each metric
+     *
+     * @return mixed
+     **/
+    function updateCount($key, $delta);
+
+    /**
      * Produce a StatsdDataInterface Object.
      *
      * @abstract
