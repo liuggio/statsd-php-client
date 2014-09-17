@@ -109,7 +109,7 @@ StatsD is a simple daemon for easy stats aggregation
 
 Graphite is a Scalable Realtime Graphing
 
-#### The Client send data with UDP (faster)
+#### The Client sends data with UDP (faster)
 
 https://www.google.com/search?q=tcp+vs+udp
 
