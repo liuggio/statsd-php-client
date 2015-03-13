@@ -28,13 +28,52 @@ class StatsDService implements StatsdDataFactoryInterface
     protected $buffer = array();
 
     /**
+     * @var float
+     */
+    protected $samplingRate;
+
+    private $samplingFunction;
+
+    /**
      * @param StatsdClient               $client
      * @param StatsdDataFactoryInterface $factory
+     * @param float                      $samplingRate see setSamplingRate
      */
-    public function __construct(StatsdClient $client, StatsdDataFactoryInterface $factory)
-    {
+    public function __construct(
+        StatsdClient $client,
+        StatsdDataFactoryInterface $factory,
+        $samplingRate = 1
+    ) {
         $this->client = $client;
         $this->factory = $factory;
+        $this->setSamplingRate($samplingRate);
+    }
+
+    /**
+     * Actually defines the sampling rate used by the service.
+     * If set to 0.1, the service will automatically discard 10%
+     * of the incoming metrics. It will also automatically flag these
+     * as sampled data to statsd.
+     *
+     * @param float $samplingRate
+     */
+    public function setSamplingRate($samplingRate)
+    {
+        if ($samplingRate <= 0.0 || 1.0 < $samplingRate) {
+            throw new \LogicException('Sampling rate shall be within ]0, 1]');
+        }
+        $this->samplingRate = $samplingRate;
+        $this->samplingFunction = function($min, $max){
+            return rand($min, $max);
+        };
+    }
+
+    /**
+     * @return float
+     */
+    public function getSamplingRate()
+    {
+        return $this->samplingRate;
     }
 
     /**
@@ -42,7 +81,9 @@ class StatsDService implements StatsdDataFactoryInterface
      */
     public function timing($key, $time)
     {
-        array_push($this->buffer, $this->factory->timing($key, $time));
+        $this->appendToBuffer(
+            $this->factory->timing($key, $time)
+        );
 
         return $this;
     }
@@ -52,7 +93,9 @@ class StatsDService implements StatsdDataFactoryInterface
      */
     public function gauge($key, $value)
     {
-        array_push($this->buffer, $this->factory->gauge($key, $value));
+        $this->appendToBuffer(
+            $this->factory->gauge($key, $value)
+        );
 
         return $this;
     }
@@ -62,7 +105,9 @@ class StatsDService implements StatsdDataFactoryInterface
      */
     public function set($key, $value)
     {
-        array_push($this->buffer, $this->factory->set($key, $value));
+        $this->appendToBuffer(
+            $this->factory->set($key, $value)
+        );
 
         return $this;
     }
@@ -72,7 +117,9 @@ class StatsDService implements StatsdDataFactoryInterface
      */
     public function increment($key)
     {
-        array_push($this->buffer, $this->factory->increment($key));
+        $this->appendToBuffer(
+            $this->factory->increment($key)
+        );
 
         return $this;
     }
@@ -82,7 +129,9 @@ class StatsDService implements StatsdDataFactoryInterface
      */
     public function decrement($key)
     {
-        array_push($this->buffer, $this->factory->decrement($key));
+        $this->appendToBuffer(
+            $this->factory->decrement($key)
+        );
 
         return $this;
     }
@@ -92,7 +141,9 @@ class StatsDService implements StatsdDataFactoryInterface
      */
     public function updateCount($key, $delta)
     {
-        array_push($this->buffer, $this->factory->updateCount($key, $delta));
+        $this->appendToBuffer(
+            $this->factory->updateCount($key, $delta)
+        );
 
         return $this;
     }
@@ -103,6 +154,27 @@ class StatsDService implements StatsdDataFactoryInterface
     public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
     {
         throw new \BadFunctionCallException('produceStatsdData is not implemented');
+    }
+
+    /**
+     * @param callable $samplingFunction rand() function by default.
+     */
+    public function setSamplingFunction(\Closure $samplingFunction)
+    {
+        $this->samplingFunction = $samplingFunction;
+    }
+
+    private function appendToBuffer(StatsdData $data)
+    {
+        if($this->samplingRate < 1){
+            $data->setSampleRate($this->samplingRate);
+            $result = call_user_func($this->samplingFunction, 0 , floor(1 / $this->samplingRate));
+            if ($result == 0) {
+                array_push($this->buffer, $data);
+            };
+        } else {
+            array_push($this->buffer, $data);
+        }
     }
 
     /**

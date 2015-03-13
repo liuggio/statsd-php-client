@@ -21,13 +21,15 @@ class StatsdServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testFactoryImplementation()
     {
+        $data = new StatsdData();
+
         // Configure the client mock.
-        $this->factoryMock->expects($this->once())->method('timing');
-        $this->factoryMock->expects($this->once())->method('gauge');
-        $this->factoryMock->expects($this->once())->method('set');
-        $this->factoryMock->expects($this->once())->method('increment');
-        $this->factoryMock->expects($this->once())->method('decrement');
-        $this->factoryMock->expects($this->once())->method('updateCount');
+        $this->factoryMock->expects($this->once())->method('timing')->willReturn($data);
+        $this->factoryMock->expects($this->once())->method('gauge')->willReturn($data);
+        $this->factoryMock->expects($this->once())->method('set')->willReturn($data);
+        $this->factoryMock->expects($this->once())->method('increment')->willReturn($data);
+        $this->factoryMock->expects($this->once())->method('decrement')->willReturn($data);
+        $this->factoryMock->expects($this->once())->method('updateCount')->willReturn($data);
 
         // Actual test
         $dut = new StatsdService($this->clientMock, $this->factoryMock);
@@ -50,5 +52,29 @@ class StatsdServiceTest extends \PHPUnit_Framework_TestCase
         $dut = new StatsdService($this->clientMock, $this->factoryMock);
         $dut->timing('foobar', 123);
         $dut->flush();
+    }
+
+    public function testSampling()
+    {
+        $tries = false;
+        $closure = function($a, $b) use (&$tries) {
+            $tries = !$tries;
+            return $tries ? 1 : 0;
+        };
+
+        $data = new StatsdData();
+        $this->factoryMock->expects($this->exactly(2))->method('timing')->willReturn($data);
+        $this->clientMock->expects($this->once())->method('send')
+            ->with($this->equalTo(array($data)));
+
+        // Actual test
+        $dut = new StatsdService($this->clientMock, $this->factoryMock);
+        $dut->setSamplingRate(0.1);
+        $dut->setSamplingFunction($closure);
+        $dut->timing('foo', 123);
+        $dut->timing('bar', 123);
+        $dut->flush();
+
+        $this->assertSame(0.1, $data->getSampleRate());
     }
 }
