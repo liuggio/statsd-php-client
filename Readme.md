@@ -46,24 +46,27 @@ Be careful, see the [Upgrading section](Readme.md#upgrade) for <= v1.0.4, there'
 ```php
 use Liuggio\StatsdClient\StatsdClient,
     Liuggio\StatsdClient\Factory\StatsdDataFactory,
-    Liuggio\StatsdClient\Sender\SocketSender;
+    Liuggio\StatsdClient\Sender\SocketSender,
+    Liuggio\StatsdClient\Service\StatsdService;
 // use Liuggio\StatsdClient\Sender\SysLogSender;
 
 $sender = new SocketSender(/*'localhost', 8126, 'udp'*/);
 // $sender = new SysLogSender(); // enabling this, the packet will not send over the socket
 
-$client = new StatsdClient($sender);
+$client  = new StatsdClient($sender);
 $factory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
+$service = new StatsdService($client, $factory);
 
-// create the data with the factory
-$data[] = $factory->timing('usageTime', 100);
-$data[] = $factory->increment('visitor');
-$data[] = $factory->decrement('click');
-$data[] = $factory->gauge('gaugor', 333);
-$data[] = $factory->set('uniques', 765);
+// create the metrics with the service
+$service->timing('usageTime', 100);
+$service->increment('visitor');
+$service->decrement('click');
+$service->gauge('gaugor', 333);
+$service->set('uniques', 765);
 
-// send the data as array or directly as object
-$client->send($data);
+// send the data to statsd
+$service->flush();
+
 ```
 
 ### Usage with Monolog
