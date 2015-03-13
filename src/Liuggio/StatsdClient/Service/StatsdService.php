@@ -46,7 +46,7 @@ class StatsDService implements StatsdDataFactoryInterface
         $samplingRate = 1
     ) {
         $this->client = $client;
-        if(is_null($factory)){
+        if (is_null($factory)) {
             $factory = new StatsdDataFactory();
         }
         $this->factory = $factory;
