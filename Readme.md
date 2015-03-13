@@ -64,6 +64,10 @@ $data[] = $factory->set('uniques', 765);
 
 // send the data as array or directly as object
 $client->send($data);
+
+// You can wrap these in the StatsdService
+$service = new \Liuggio\StatsdClient\Service\StatsdService($client, $factory);
+$service->timing('usageTime', 100)->flush();
 ```
 
 ### Usage with Monolog
