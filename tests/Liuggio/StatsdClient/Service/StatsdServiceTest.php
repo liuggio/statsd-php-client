@@ -19,6 +19,12 @@ class StatsdServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
     }
 
+    public function testConstructorWithoutFactory()
+    {
+        $dut = new StatsdService($this->clientMock);
+        $dut->timing('foo.bar', 123);
+    }
+
     public function testFactoryImplementation()
     {
         $data = new StatsdData();
