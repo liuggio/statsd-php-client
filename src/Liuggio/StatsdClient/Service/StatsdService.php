@@ -3,6 +3,7 @@
 namespace Liuggio\StatsdClient\Service;
 
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
+use Liuggio\StatsdClient\Factory\StatsdDataFactory;
 use Liuggio\StatsdClient\Factory\StatsdDataFactoryInterface;
 use Liuggio\StatsdClient\StatsdClient;
 use Liuggio\StatsdClient\Entity\StatsdData;
@@ -41,10 +42,13 @@ class StatsDService implements StatsdDataFactoryInterface
      */
     public function __construct(
         StatsdClient $client,
-        StatsdDataFactoryInterface $factory,
+        StatsdDataFactoryInterface $factory = null,
         $samplingRate = 1
     ) {
         $this->client = $client;
+        if (is_null($factory)) {
+            $factory = new StatsdDataFactory();
+        }
         $this->factory = $factory;
         $this->setSamplingRate($samplingRate);
     }
