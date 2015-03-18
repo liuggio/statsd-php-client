@@ -11,7 +11,7 @@ use Liuggio\StatsdClient\Entity\StatsdData;
 /**
  * Simplifies access to StatsD client and factory, buffers all data.
  */
-class StatsDService implements StatsdDataFactoryInterface
+class StatsdService implements StatsdDataFactoryInterface
 {
     /**
      * @var \Liuggio\StatsdClient\StatsdClient
