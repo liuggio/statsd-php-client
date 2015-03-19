@@ -35,7 +35,7 @@ Class SocketSender implements SenderInterface
     public function open()
     {
         $fp = socket_create(AF_INET, SOCK_DGRAM, $this->getProtocol());
-
+        socket_set_nonblock($fp);
         return $fp;
     }
 
