@@ -10,7 +10,7 @@ Class SocketSender implements SenderInterface
     private $host;
     private $protocol;
 
-    public function __construct($hostname = 'localhost', $port = 8126, $protocol = 'udp')
+    public function __construct($hostname = 'localhost', $port = 8125, $protocol = 'udp')
     {
         $this->host = $hostname;
         $this->port = $port;
