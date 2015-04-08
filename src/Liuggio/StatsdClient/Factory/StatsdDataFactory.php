@@ -3,7 +3,6 @@
 namespace Liuggio\StatsdClient\Factory;
 
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
-use Liuggio\StatsdClient\KeyMetricAbstract;
 
 class StatsdDataFactory implements StatsdDataFactoryInterface
 {

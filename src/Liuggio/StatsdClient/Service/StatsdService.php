@@ -6,7 +6,7 @@ use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 use Liuggio\StatsdClient\Factory\StatsdDataFactoryInterface;
 use Liuggio\StatsdClient\StatsdClient;
 use Liuggio\StatsdClient\Entity\StatsdData;
-use Liuggio\StatsdClient\KeyMetricAbstract;
+
 /**
  * Simplifies access to StatsD client and factory, buffers all data.
  */
