@@ -3,9 +3,17 @@
 namespace Liuggio\StatsdClient\Factory;
 
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
+use Liuggio\StatsdClient\KeyMetricAbstract;
 
 class StatsdDataFactory implements StatsdDataFactoryInterface
 {
+    /**
+     * @var string
+     */
+    protected $prefix = null;
+
+    protected $suffix = null;
+
     /**
      * @var StatsdDataInterface
      */
@@ -126,5 +134,54 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     public function getEntityClass()
     {
         return $this->entityClass;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPrefix($key)
+    {
+        $this->prefix = $key;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSuffix($key)
+    {
+        $this->suffix = $key;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSuffix()
+    {
+        return $this->suffix;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    public function getKeyMetric($key)
+    {
+        if ($this->getSuffix() !== null) $key = sprintf('%s.%s', $key, $this->getSuffix());
+        if ($this->getPrefix() !== null) $key = sprintf('%s.%s', $this->getPrefix(), $key);
+
+        return $key;
     }
 }

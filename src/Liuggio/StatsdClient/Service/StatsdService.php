@@ -6,7 +6,7 @@ use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 use Liuggio\StatsdClient\Factory\StatsdDataFactoryInterface;
 use Liuggio\StatsdClient\StatsdClient;
 use Liuggio\StatsdClient\Entity\StatsdData;
-
+use Liuggio\StatsdClient\KeyMetricAbstract;
 /**
  * Simplifies access to StatsD client and factory, buffers all data.
  */
@@ -82,7 +82,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function timing($key, $time)
     {
         $this->appendToBuffer(
-            $this->factory->timing($key, $time)
+            $this->factory->timing($this->getKeyMetric($key), $time)
         );
 
         return $this;
@@ -94,7 +94,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function gauge($key, $value)
     {
         $this->appendToBuffer(
-            $this->factory->gauge($key, $value)
+            $this->factory->gauge($this->getKeyMetric($key), $value)
         );
 
         return $this;
@@ -106,7 +106,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function set($key, $value)
     {
         $this->appendToBuffer(
-            $this->factory->set($key, $value)
+            $this->factory->set($this->getKeyMetric($key), $value)
         );
 
         return $this;
@@ -118,7 +118,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function increment($key)
     {
         $this->appendToBuffer(
-            $this->factory->increment($key)
+            $this->factory->increment($this->getKeyMetric($key))
         );
 
         return $this;
@@ -130,7 +130,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function decrement($key)
     {
         $this->appendToBuffer(
-            $this->factory->decrement($key)
+            $this->factory->decrement($this->getKeyMetric($key))
         );
 
         return $this;
@@ -142,7 +142,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function updateCount($key, $delta)
     {
         $this->appendToBuffer(
-            $this->factory->updateCount($key, $delta)
+            $this->factory->updateCount($this->getKeyMetric($key), $delta)
         );
 
         return $this;
@@ -188,5 +188,49 @@ class StatsDService implements StatsdDataFactoryInterface
         $this->buffer = array();
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPrefix($key)
+    {
+        $this->factory->setPrefix($key);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrefix()
+    {
+        return $this->factory->getPrefix();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSuffix($key)
+    {
+        $this->factory->setSuffix($key);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSuffix()
+    {
+        return $this->factory->getSuffix();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getKeyMetric($key)
+    {
+        return $this->factory->getKeyMetric($key);
     }
 }
