@@ -79,7 +79,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
         $statsdData = $this->produceStatsdDataEntity();
 
         if (null !== $key) {
-            $statsdData->setKey($key);
+            $statsdData->setKey($this->getKeyMetric($key));
         }
 
         if (null !== $value) {
@@ -149,14 +149,6 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getPrefix()
-    {
-        return $this->prefix;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setSuffix($key)
     {
         $this->suffix = $key;
@@ -165,21 +157,13 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getSuffix()
-    {
-        return $this->suffix;
-    }
-
-    /**
      * @param $key
      * @return string
      */
     public function getKeyMetric($key)
     {
-        if ($this->getSuffix() !== null) $key = sprintf('%s.%s', $key, $this->getSuffix());
-        if ($this->getPrefix() !== null) $key = sprintf('%s.%s', $this->getPrefix(), $key);
+        if ($this->suffix !== null) $key = sprintf('%s.%s', $key, $this->suffix);
+        if ($this->prefix !== null) $key = sprintf('%s.%s', $this->prefix, $key);
 
         return $key;
     }

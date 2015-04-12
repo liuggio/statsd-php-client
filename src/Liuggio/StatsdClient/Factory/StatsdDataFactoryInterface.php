@@ -108,15 +108,6 @@ Interface StatsdDataFactoryInterface
     function setSuffix($suffix);
 
     /**
-     * Get an suffix key
-     *
-     * @abstract
-     *
-     * @return mixed
-     */
-    function getSuffix();
-
-    /**
      * Set an prefix key
      *
      * @abstract
@@ -125,15 +116,6 @@ Interface StatsdDataFactoryInterface
      * @return mixed
      */
     function setPrefix($prefix);
-
-    /**
-     * Get an prefix key
-     *
-     * @abstract
-     *
-     * @return mixed
-     */
-    function getPrefix();
 
     /**
      * get the key according key prefix or suffix
