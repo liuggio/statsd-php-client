@@ -78,11 +78,12 @@ class StatsDService implements StatsdDataFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
      */
     public function timing($key, $time)
     {
         $this->appendToBuffer(
-            $this->factory->timing($this->getKeyMetric($key), $time)
+            $this->factory->timing($key, $time)
         );
 
         return $this;
@@ -94,7 +95,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function gauge($key, $value)
     {
         $this->appendToBuffer(
-            $this->factory->gauge($this->getKeyMetric($key), $value)
+            $this->factory->gauge($key, $value)
         );
 
         return $this;
@@ -106,7 +107,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function set($key, $value)
     {
         $this->appendToBuffer(
-            $this->factory->set($this->getKeyMetric($key), $value)
+            $this->factory->set($key, $value)
         );
 
         return $this;
@@ -118,7 +119,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function increment($key)
     {
         $this->appendToBuffer(
-            $this->factory->increment($this->getKeyMetric($key))
+            $this->factory->increment($key)
         );
 
         return $this;
@@ -130,7 +131,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function decrement($key)
     {
         $this->appendToBuffer(
-            $this->factory->decrement($this->getKeyMetric($key))
+            $this->factory->decrement($key)
         );
 
         return $this;
@@ -142,7 +143,7 @@ class StatsDService implements StatsdDataFactoryInterface
     public function updateCount($key, $delta)
     {
         $this->appendToBuffer(
-            $this->factory->updateCount($this->getKeyMetric($key), $delta)
+            $this->factory->updateCount($key, $delta)
         );
 
         return $this;
@@ -203,14 +204,6 @@ class StatsDService implements StatsdDataFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getPrefix()
-    {
-        return $this->factory->getPrefix();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setSuffix($key)
     {
         $this->factory->setSuffix($key);
@@ -221,16 +214,8 @@ class StatsDService implements StatsdDataFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getSuffix()
-    {
-        return $this->factory->getSuffix();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getKeyMetric($key)
     {
-        return $this->factory->getKeyMetric($key);
+        throw new \BadFunctionCallException('getKeyMetric is not implemented');
     }
 }
