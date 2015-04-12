@@ -2,52 +2,54 @@
 
 namespace Liuggio\StatsdClient;
 
-use Liuggio\StatsdClient\Sender\SysLogSender;
-use Liuggio\StatsdClient\StatsdClient,
-    Liuggio\StatsdClient\Factory\StatsdDataFactory,
-    Liuggio\StatsdClient\Sender\SocketSender,
+use Liuggio\StatsdClient\Factory\StatsdDataFactory,
     Liuggio\StatsdClient\Service\StatsdService;
 
 class KeymetricTest extends \PHPUnit_Framework_TestCase
 {
-    private $sender;
-    private $client;
-    private $factory;
-
-    protected function setUp()
+    /**
+     * Test Prefix and suffix key metric
+     */
+    public function testKeyMetric()
     {
-        $this->sender = new SysLogSender();
-        $this->client = new StatsdClient($this->sender);
-        $this->factory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
-    }
+        $client = $this->getMockBuilder('Liuggio\StatsdClient\StatsdClient')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factory = new StatsdDataFactory('\Liuggio\StatsdClient\Entity\StatsdData');
 
-    public function testMetrickey()
-    {
-        // First test
-        $service = new StatsDService($this->client, $this->factory);
+        $service = new StatsdService($client, $factory);
 
-        $service->setPrefix('hostname');
+        // First - Prefix and suffix
+        $service->setPrefix('prefix_hostname');
+        $service->setSuffix('hostname_suffix');
         $service->timing('usageTime', 100);
         $service->increment('visitor');
+
+        $this->assertSame('prefix_hostname.usageTime.hostname_suffix', $factory->produceStatsdData('usageTime')->getKey());
+        $this->assertSame('prefix_hostname.visitor.hostname_suffix', $factory->produceStatsdData('visitor')->getKey());
+
+        // Second - Prefix only
+        $service->setSuffix(null);
         $service->decrement('click');
+
+        $this->assertSame('prefix_hostname.click', $factory->produceStatsdData('click')->getKey());
+
+        // Second - Suffix only
+        $service->setSuffix('hostname_suffix');
+        $service->setPrefix(null);
         $service->gauge('gaugor', 333);
+
+        $this->assertSame('gaugor.hostname_suffix', $factory->produceStatsdData('gaugor')->getKey());
+
+        // Third - Never Prefix and suffix
+        $service->setPrefix(null);
+        $service->setSuffix(null);
         $service->set('uniques', 765);
 
-        $service->flush();
-        unset($service);
+        $this->assertSame('uniques', $factory->produceStatsdData('uniques')->getKey());
 
-        // Second test
-        $service = new StatsDService($this->client, $this->factory);
-        $service->setPrefix(null);
-        $service->setSuffix('hostname');
-        $service->timing('vhost.usageTime', 100);
-        $service->increment('vhost.visitor');
-        $service->decrement('vhost.click');
-        $service->gauge('vhost.gaugor', 333);
-        $service->set('vhost.uniques', 765);
 
         $service->flush();
-
-        $service->timing('vhost.gaugor.hostname',800)->flush();
     }
+
 }
