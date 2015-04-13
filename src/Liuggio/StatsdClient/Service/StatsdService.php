@@ -210,12 +210,4 @@ class StatsDService implements StatsdDataFactoryInterface
 
         return $this;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getKeyMetric($key)
-    {
-        throw new \BadFunctionCallException('getKeyMetric is not implemented');
-    }
 }
