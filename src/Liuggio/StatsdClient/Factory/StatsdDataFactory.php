@@ -160,7 +160,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
      * @param $key
      * @return string
      */
-    public function getKeyMetric($key)
+    private function getKeyMetric($key)
     {
         if ($this->suffix !== null) $key = sprintf('%s.%s', $key, $this->suffix);
         if ($this->prefix !== null) $key = sprintf('%s.%s', $this->prefix, $key);
