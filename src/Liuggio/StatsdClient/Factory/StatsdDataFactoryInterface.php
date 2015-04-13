@@ -116,13 +116,4 @@ Interface StatsdDataFactoryInterface
      * @return mixed
      */
     function setPrefix($prefix);
-
-    /**
-     * get the key according key prefix or suffix
-     *
-     * @abstract
-     *
-     * @return mixed
-     */
-    function getKeyMetric($key);
 }
