@@ -2,8 +2,7 @@
 
 namespace Liuggio\StatsdClient\Entity;
 
-use Liuggio\StatsdClient\Service\StatsdService,
-    Liuggio\StatsdClient\Factory\StatsdDataFactory;
+use Liuggio\StatsdClient\Service\StatsdService;
 
 class StatsdServiceTest extends \PHPUnit_Framework_TestCase
 {
