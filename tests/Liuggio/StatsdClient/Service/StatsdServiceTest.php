@@ -2,7 +2,8 @@
 
 namespace Liuggio\StatsdClient\Entity;
 
-use Liuggio\StatsdClient\Service\StatsdService;
+use Liuggio\StatsdClient\Service\StatsdService,
+    Liuggio\StatsdClient\Factory\StatsdDataFactory;
 
 class StatsdServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,6 +31,8 @@ class StatsdServiceTest extends \PHPUnit_Framework_TestCase
         $this->factoryMock->expects($this->once())->method('increment')->willReturn($data);
         $this->factoryMock->expects($this->once())->method('decrement')->willReturn($data);
         $this->factoryMock->expects($this->once())->method('updateCount')->willReturn($data);
+        $this->factoryMock->expects($this->once())->method('setPrefix')->willReturn($data);
+        $this->factoryMock->expects($this->once())->method('setSuffix')->willReturn($data);
 
         // Actual test
         $dut = new StatsdService($this->clientMock, $this->factoryMock);
@@ -39,6 +42,8 @@ class StatsdServiceTest extends \PHPUnit_Framework_TestCase
         $dut->increment('foo.bar');
         $dut->decrement('foo.bar');
         $dut->updateCount('foo.bar', 123);
+        $dut->setPrefix('prefix_hostname');
+        $dut->setSuffix('hostname_suffix');
     }
 
     public function testFlush()
