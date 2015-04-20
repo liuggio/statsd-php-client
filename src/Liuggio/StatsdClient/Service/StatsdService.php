@@ -78,6 +78,7 @@ class StatsDService implements StatsdDataFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
      */
     public function timing($key, $time)
     {
@@ -186,6 +187,26 @@ class StatsDService implements StatsdDataFactoryInterface
     {
         $this->client->send($this->buffer);
         $this->buffer = array();
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPrefix($key)
+    {
+        $this->factory->setPrefix($key);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSuffix($key)
+    {
+        $this->factory->setSuffix($key);
 
         return $this;
     }
