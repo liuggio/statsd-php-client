@@ -95,23 +95,6 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('c', $obj->getMetric());
     }
 
-
-    /**
-     * Prefix and suffix
-     */
-    public function testKeyMetricWithPrefixAndSuffix()
-    {
-        $key = 'usageTime';
-        $value = 100;
-
-        $this->statsDataFactory->setPrefix('prefix_hostname');
-        $this->statsDataFactory->setSuffix('hostname_suffix');
-        $obj = $this->statsDataFactory->timing($key, $value);
-
-        $this->assertEquals("prefix_hostname.{$key}.hostname_suffix", $obj->getKey());
-        $this->assertEquals($value, $obj->getValue());
-    }
-
     /**
      * Prefix only
      */

@@ -9,9 +9,12 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     /**
      * @var string
      */
-    protected $prefix = null;
+    private $prefix = null;
 
-    protected $suffix = null;
+    /**
+     * @var string
+     */
+    private $suffix = null;
 
     /**
      * @var StatsdDataInterface
