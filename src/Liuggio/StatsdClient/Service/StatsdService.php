@@ -82,6 +82,7 @@ class StatsdService implements StatsdDataFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
      */
     public function timing($key, $time)
     {
@@ -193,4 +194,25 @@ class StatsdService implements StatsdDataFactoryInterface
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPrefix($key)
+    {
+        $this->factory->setPrefix($key);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSuffix($key)
+    {
+        $this->factory->setSuffix($key);
+
+        return $this;
+    }
 }
+

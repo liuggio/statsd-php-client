@@ -7,6 +7,16 @@ use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 class StatsdDataFactory implements StatsdDataFactoryInterface
 {
     /**
+     * @var string
+     */
+    private $prefix = null;
+
+    /**
+     * @var string
+     */
+    private $suffix = null;
+
+    /**
      * @var StatsdDataInterface
      */
     private $entityClass;
@@ -72,7 +82,7 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
         $statsdData = $this->produceStatsdDataEntity();
 
         if (null !== $key) {
-            $statsdData->setKey($key);
+            $statsdData->setKey($this->getKeyMetric($key));
         }
 
         if (null !== $value) {
@@ -126,5 +136,38 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     public function getEntityClass()
     {
         return $this->entityClass;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPrefix($key)
+    {
+        $this->prefix = $key;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSuffix($key)
+    {
+        $this->suffix = $key;
+
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    private function getKeyMetric($key)
+    {
+        if ($this->suffix !== null) $key = sprintf('%s.%s', $key, $this->suffix);
+        if ($this->prefix !== null) $key = sprintf('%s.%s', $this->prefix, $key);
+
+        return $key;
     }
 }

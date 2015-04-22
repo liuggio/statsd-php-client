@@ -94,4 +94,36 @@ class StatsDataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($stringValue, $obj->getValue());
         $this->assertEquals('c', $obj->getMetric());
     }
+
+    /**
+     * Prefix only
+     */
+    public function testKeyMetricWithPrefixOnly()
+    {
+        $key = 'gaugor';
+        $value = 333;
+
+        $this->statsDataFactory->setPrefix('prefix_hostname');
+        $this->statsDataFactory->setSuffix(null);
+        $obj = $this->statsDataFactory->gauge($key, $value);
+
+        $this->assertEquals("prefix_hostname.{$key}", $obj->getKey());
+        $this->assertEquals($value, $obj->getValue());
+    }
+
+    /**
+     * Suffix only
+     */
+    public function testKeyMetricWithSuffixOnly()
+    {
+        $key = 'uniques';
+        $value = 765;
+
+        $this->statsDataFactory->setPrefix(null);
+        $this->statsDataFactory->setSuffix('hostname_suffix');
+        $obj = $this->statsDataFactory->set($key, $value);
+
+        $this->assertEquals("{$key}.hostname_suffix", $obj->getKey());
+        $this->assertEquals($value, $obj->getValue());
+    }
 }
