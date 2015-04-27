@@ -96,24 +96,4 @@ Interface StatsdDataFactoryInterface
      * @return StatsdDataInterface
      **/
     function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT);
-
-    /**
-     * Set an suffix key
-     *
-     * @abstract
-     *
-     * @param $suffix
-     * @return mixed
-     */
-    function setSuffix($suffix);
-
-    /**
-     * Set an prefix key
-     *
-     * @abstract
-     *
-     * @param $prefix
-     * @return mixed
-     */
-    function setPrefix($prefix);
 }

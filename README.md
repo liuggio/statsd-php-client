@@ -67,10 +67,6 @@ $service->set('uniques', 765);
 // send the data to statsd
 $service->flush();
 
-// you can prefix or suffix all keys by using
-$service->setPrefix('prefix');
-$service->setSuffix('suffix');
-
 ```
 
 ### Usage with Monolog
