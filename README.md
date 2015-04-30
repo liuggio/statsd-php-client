@@ -147,6 +147,6 @@ phpunit --coverage-html reports
 BC from the v1.0.4 version, [see Sender and Client differences](https://github.com/liuggio/statsd-php-client/pull/5/files).
 
 
-## TODO
+## Core developers:
 
-example with monolog
+This project is actively mantained by David Moreau AKA @dav-m85 and @liuggio
