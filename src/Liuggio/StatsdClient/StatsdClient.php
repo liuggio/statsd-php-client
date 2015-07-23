@@ -140,13 +140,13 @@ class StatsdClient implements StatsdClientInterface
         if ($this->getReducePacket()) {
             $data = $this->reduceCount($data);
         }
+        $written = 0;
         //failures in any of this should be silently ignored if ..
         try {
             $fp = $this->getSender()->open();
             if (!$fp) {
                 return;
             }
-            $written = 0;
             foreach ($data as $key => $message) {
                 $written += $this->getSender()->write($fp, $message);
             }
