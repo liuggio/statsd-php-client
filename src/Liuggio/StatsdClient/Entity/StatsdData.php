@@ -2,10 +2,12 @@
 
 namespace Liuggio\StatsdClient\Entity;
 
-use Liuggio\StatsdClient\Entity\StatsdDataInterface;
-
-class StatsdData implements StatsdDataInterface
+class StatsdData
 {
+    CONST STATSD_METRIC_TIMING = 'ms';
+    CONST STATSD_METRIC_GAUGE  = 'g';
+    CONST STATSD_METRIC_SET    = 's';
+    CONST STATSD_METRIC_COUNT  = 'c';
 
     private $key;
     private $value;

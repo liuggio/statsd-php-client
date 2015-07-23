@@ -2,11 +2,10 @@
 
 namespace Liuggio\StatsdClient\Service;
 
-use Liuggio\StatsdClient\Entity\StatsdDataInterface;
+use Liuggio\StatsdClient\Entity\StatsdData;
 use Liuggio\StatsdClient\Factory\StatsdDataFactory;
 use Liuggio\StatsdClient\Factory\StatsdDataFactoryInterface;
 use Liuggio\StatsdClient\StatsdClient;
-use Liuggio\StatsdClient\Entity\StatsdData;
 
 /**
  * Simplifies access to StatsD client and factory, buffers all data.
@@ -155,7 +154,7 @@ class StatsdService implements StatsdDataFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
+    public function produceStatsdData($key, $value = 1, $metric = StatsdData::STATSD_METRIC_COUNT)
     {
         throw new \BadFunctionCallException('produceStatsdData is not implemented');
     }

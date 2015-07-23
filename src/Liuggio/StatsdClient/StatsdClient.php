@@ -2,8 +2,8 @@
 
 namespace Liuggio\StatsdClient;
 
+use Liuggio\StatsdClient\Entity\StatsdData;
 use Liuggio\StatsdClient\Sender\SenderInterface;
-use Liuggio\StatsdClient\Entity\StatsdDataInterface;
 use Liuggio\StatsdClient\Exception\InvalidArgumentException;
 
 class StatsdClient implements StatsdClientInterface
@@ -126,7 +126,7 @@ class StatsdClient implements StatsdClientInterface
     public function send($data, $sampleRate = 1)
     {
         // check format
-        if ($data instanceof StatsdDataInterface || is_string($data)) {
+        if ($data instanceof StatsdData || is_string($data)) {
             $data = array($data);
         }
         if (!is_array($data) || empty($data)) {
