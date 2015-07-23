@@ -1,18 +1,22 @@
 language: php
 
-php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - hhvm
+sudo: false
+
+matrix:
+    include:
+        - php: 5.3.3
+        - php: 5.3
+        - php: 5.3
+          env: deps=low
+        - php: 5.4
+        - php: 5.5
+        - php: 5.6
+        - php: 7
+        - php: hhvm
+    fast_finish: true
 
 before_script:
-  - wget -nc http://getcomposer.org/composer.phar
-  - php composer.phar install --dev
+  - if [ "$deps" == "low" ]; then composer update --prefer-source --prefer-lowest --prefer-stable; fi
+  - if [ "$deps" != "low" ]; then composer install --prefer-source; fi
 
-script: phpunit
-
-notifications:
-  email:
-    - liuggio@gmail.com
+script: ./vendor/bin/phpunit
