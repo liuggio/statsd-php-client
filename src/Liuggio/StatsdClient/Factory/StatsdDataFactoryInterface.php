@@ -2,7 +2,7 @@
 
 namespace Liuggio\StatsdClient\Factory;
 
-use Liuggio\StatsdClient\Entity\StatsdDataInterface;
+use Liuggio\StatsdClient\Entity\StatsdData;
 
 Interface StatsdDataFactoryInterface
 {
@@ -85,7 +85,7 @@ Interface StatsdDataFactoryInterface
     function updateCount($key, $delta);
 
     /**
-     * Produce a StatsdDataInterface Object.
+     * Produce a StatsdData Object.
      *
      * @abstract
      *
@@ -93,7 +93,7 @@ Interface StatsdDataFactoryInterface
      * @param int    $value  The amount to increment/decrement each metric by.
      * @param string $metric The metric type ("c" for count, "ms" for timing, "g" for gauge, "s" for set)
      *
-     * @return StatsdDataInterface
+     * @return StatsdData
      **/
-    function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT);
+    function produceStatsdData($key, $value = 1, $metric = StatsdData::STATSD_METRIC_COUNT);
 }

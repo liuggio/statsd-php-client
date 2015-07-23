@@ -2,14 +2,14 @@
 
 namespace Liuggio\StatsdClient\Factory;
 
-use Liuggio\StatsdClient\Entity\StatsdDataInterface;
+use Liuggio\StatsdClient\Entity\StatsdData;
 
 class StatsdDataFactory implements StatsdDataFactoryInterface
 {
-    /**
-     * @var StatsdDataInterface
-     */
+    /** @var StatsdData */
     private $entityClass;
+    /** @var boolean */
+    private $failSilently;
 
     public function __construct($entity_class = '\Liuggio\StatsdClient\Entity\StatsdData')
     {
@@ -18,56 +18,56 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
 
     /**
      * {@inheritDoc}
-     **/
+     */
     public function timing($key, $time)
     {
-        return $this->produceStatsdData($key, $time, StatsdDataInterface::STATSD_METRIC_TIMING);
+        return $this->produceStatsdData($key, $time, StatsdData::STATSD_METRIC_TIMING);
     }
 
     /**
      * {@inheritDoc}
-     **/
+     */
     public function gauge($key, $value)
     {
-        return $this->produceStatsdData($key, $value, StatsdDataInterface::STATSD_METRIC_GAUGE);
+        return $this->produceStatsdData($key, $value, StatsdData::STATSD_METRIC_GAUGE);
     }
 
     /**
      * {@inheritDoc}
-     **/
+     */
     public function set($key, $value)
     {
-        return $this->produceStatsdData($key, $value, StatsdDataInterface::STATSD_METRIC_SET);
+        return $this->produceStatsdData($key, $value, StatsdData::STATSD_METRIC_SET);
     }
 
     /**
      * {@inheritDoc}
-     **/
+     */
     public function increment($key)
     {
-        return $this->produceStatsdData($key, 1, StatsdDataInterface::STATSD_METRIC_COUNT);
+        return $this->produceStatsdData($key, 1, StatsdData::STATSD_METRIC_COUNT);
     }
 
     /**
      * {@inheritDoc}
-     **/
+     */
     public function decrement($key)
     {
-        return $this->produceStatsdData($key, -1, StatsdDataInterface::STATSD_METRIC_COUNT);
+        return $this->produceStatsdData($key, -1, StatsdData::STATSD_METRIC_COUNT);
     }
 
     /**
      * {@inheritDoc}
-     **/
+     */
     public function updateCount($key, $delta)
     {
-        return $this->produceStatsdData($key, $delta, StatsdDataInterface::STATSD_METRIC_COUNT);
+        return $this->produceStatsdData($key, $delta, StatsdData::STATSD_METRIC_COUNT);
     }
 
     /**
      * {@inheritDoc}
-     **/
-    public function produceStatsdData($key, $value = 1, $metric = StatsdDataInterface::STATSD_METRIC_COUNT)
+     */
+    public function produceStatsdData($key, $value = 1, $metric = StatsdData::STATSD_METRIC_COUNT)
     {
         $statsdData = $this->produceStatsdDataEntity();
 
@@ -87,8 +87,9 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
-     **/
+     * @return StatsdData
+     * @deprecated
+     */
     public function produceStatsdDataEntity()
     {
         $statsdData = $this->getEntityClass();
@@ -97,32 +98,32 @@ class StatsdDataFactory implements StatsdDataFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
-     **/
+     * @deprecated
+     */
     public function setFailSilently($failSilently)
     {
         $this->failSilently = $failSilently;
     }
 
     /**
-     * {@inheritDoc}
-     **/
+     * @deprecated
+     */
     public function getFailSilently()
     {
         return $this->failSilently;
     }
 
     /**
-     * {@inheritDoc}
-     **/
+     * @deprecated
+     */
     public function setEntityClass($entityClass)
     {
         $this->entityClass = $entityClass;
     }
 
     /**
-     * {@inheritDoc}
-     **/
+     * @deprecated
+     */
     public function getEntityClass()
     {
         return $this->entityClass;
