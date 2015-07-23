@@ -30,9 +30,9 @@ class StatsdClient implements StatsdClientInterface
      * @param Boolean                                      $reducePacket
      * @param Boolean                                      $fail_silently
      */
-    public function __construct(SenderInterface $sender, $reducePacket = true, $fail_silently = true)
+    public function __construct(SenderInterface $sender = null, $reducePacket = true, $fail_silently = true)
     {
-        $this->sender       = $sender;
+        $this->sender       = $sender?:new SocketSender();
         $this->reducePacket = $reducePacket;
         $this->failSilently = $fail_silently;
     }
