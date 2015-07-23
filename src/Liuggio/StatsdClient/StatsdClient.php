@@ -4,7 +4,7 @@ namespace Liuggio\StatsdClient;
 
 use Liuggio\StatsdClient\Sender\SenderInterface;
 use Liuggio\StatsdClient\Entity\StatsdDataInterface;
-use Liuggio\StatsdClient\Exception\InvalidArgumentException;
+use Liuggio\StatsdClient\Sender\SocketSender;
 
 class StatsdClient implements StatsdClientInterface
 {
@@ -30,9 +30,9 @@ class StatsdClient implements StatsdClientInterface
      * @param Boolean                                      $reducePacket
      * @param Boolean                                      $fail_silently
      */
-    public function __construct(SenderInterface $sender, $reducePacket = true, $fail_silently = true)
+    public function __construct(SenderInterface $sender = null, $reducePacket = true, $fail_silently = true)
     {
-        $this->sender       = $sender;
+        $this->sender       = $sender?:new SocketSender();
         $this->reducePacket = $reducePacket;
         $this->failSilently = $fail_silently;
     }
