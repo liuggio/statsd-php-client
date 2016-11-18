@@ -55,7 +55,7 @@ class StatsdService implements StatsdDataFactoryInterface
 
     /**
      * Actually defines the sampling rate used by the service.
-     * If set to 0.1, the service will automatically discard 10%
+     * If set to 0.1, the service will automatically discard 90%
      * of the incoming metrics. It will also automatically flag these
      * as sampled data to statsd.
      *
@@ -68,7 +68,7 @@ class StatsdService implements StatsdDataFactoryInterface
         }
         $this->samplingRate = $samplingRate;
         $this->samplingFunction = function($min, $max){
-            return rand($min, $max);
+            return rand($min, $max - 1);
         };
     }
 
