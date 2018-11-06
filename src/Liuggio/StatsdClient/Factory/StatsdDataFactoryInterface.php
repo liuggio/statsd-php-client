@@ -77,7 +77,7 @@ Interface StatsdDataFactoryInterface
      *
      * @abstract
      *
-     * @param string|array $key        The metric(s) to decrement.
+     * @param string|array $key        The metric(s) to update.
      * @param integer      $delta      The delta to add to the each metric
      *
      * @return mixed
