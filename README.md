@@ -140,4 +140,4 @@ phpunit --coverage-html reports
 
 ## Core developers:
 
-This project is actively mantained by David Moreau AKA @dav-m85 and @liuggio
+This project is actively maintained by David Moreau AKA @dav-m85 and @liuggio
