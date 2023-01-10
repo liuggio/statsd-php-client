@@ -6,7 +6,7 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=7.1"
     },
     "authors": [
         {
@@ -21,10 +21,13 @@
       "psr-0": {"Liuggio": "tests/"}
     },
     "require-dev": {
-        "monolog/monolog": ">=1.2.0",
-        "phpunit/phpunit": "^4.7"
+        "monolog/monolog": "^1.2.0",
+        "phpunit/phpunit": "^8.5"
     },
     "suggest": {
-        "monolog/monolog": "Monolog, in order to do generate statistic from log >=1.2.0)"
+        "monolog/monolog": "Monolog, in order to do generate statistic from log (^1.2.0)"
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

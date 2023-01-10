@@ -2,10 +2,9 @@
 
 namespace Liuggio\StatsdClient\Entity;
 
-use Liuggio\StatsdClient\Entity\StatsdData;
+use PHPUnit\Framework\TestCase;
 
-
-class StatsdDataTest extends \PHPUnit_Framework_TestCase
+class StatsdDataTest extends TestCase
 {
     public function testGetMessage()
     {

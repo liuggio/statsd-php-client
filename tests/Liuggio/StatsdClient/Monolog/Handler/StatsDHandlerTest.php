@@ -4,9 +4,9 @@ namespace Liuggio\StatsdClient\Tests\Monolog\Handler;
 
 use Monolog\Logger;
 use Liuggio\StatsdClient\Monolog\Handler\StatsDHandler;
+use PHPUnit\Framework\TestCase;
 
-
-class StatsDHandlerTest extends \PHPUnit_Framework_TestCase
+class StatsDHandlerTest extends TestCase
 {
     /**
      * @return array Record
@@ -39,11 +39,11 @@ class StatsDHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Monolog\Formatter\FormatterInterface
+     * @return \Monolog\Formatter\FormatterInterface
      */
     protected function getIdentityFormatter()
     {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter = $this->getMockBuilder('Monolog\\Formatter\\FormatterInterface')->getMock();
         $formatter->expects($this->any())
             ->method('format')
             ->will($this->returnCallback(function($record) { return $record['message']; }));
@@ -52,7 +52,7 @@ class StatsDHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    protected function setup()
+    protected function setup(): void
     {
         if (!interface_exists('Liuggio\StatsdClient\StatsdClientInterface')) {
             $this->markTestSkipped('The "liuggio/statsd-php-client" package is not installed');
@@ -61,8 +61,8 @@ class StatsDHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $client = $this->getMock('Liuggio\StatsdClient\StatsdClientInterface');
-        $factory = $this->getMock('Liuggio\StatsdClient\Factory\StatsdDataFactoryInterface');
+        $client = $this->getMockBuilder('Liuggio\StatsdClient\StatsdClientInterface')->getMock();
+        $factory = $this->getMockBuilder('Liuggio\StatsdClient\Factory\StatsdDataFactoryInterface')->getMock();
 
         $factory->expects($this->any())
             ->method('increment')

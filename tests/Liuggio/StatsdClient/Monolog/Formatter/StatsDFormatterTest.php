@@ -2,13 +2,13 @@
 
 namespace Liuggio\StatsdClient\Tests\Monolog\Formatter;
 
-use Monolog\Logger;
 use Liuggio\StatsdClient\Monolog\Formatter\StatsDFormatter;
+use PHPUnit\Framework\TestCase;
 
 /**
- * @covers Liuggio\StatsdClient\Monolog\Formatter\StatsDFormatter
+ * @covers \Liuggio\StatsdClient\Monolog\Formatter\StatsDFormatter
  */
-class StatsDFormatterTest extends \PHPUnit_Framework_TestCase
+class StatsDFormatterTest extends TestCase
 {
     public function testBatchFormat()
     {

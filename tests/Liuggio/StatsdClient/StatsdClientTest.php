@@ -2,10 +2,10 @@
 
 namespace Liuggio\StatsdClient;
 
-use Liuggio\StatsdClient\StatsdClient;
 use Liuggio\StatsdClient\Entity\StatsdData;
+use PHPUnit\Framework\TestCase;
 
-class StatsdClientTest extends \PHPUnit_Framework_TestCase
+class StatsdClientTest extends TestCase
 {
 
     public function mockSenderWithAssertionOnWrite($messageToAssert=null) {
@@ -207,7 +207,7 @@ class StatsdClientTest extends \PHPUnit_Framework_TestCase
 
     public function testSampleRate()
     {
-        $senderMock = $this->getMock('Liuggio\StatsdClient\Sender\SenderInterface');
+        $senderMock = $this->getMockBuilder('Liuggio\StatsdClient\Sender\SenderInterface')->getMock();
         $senderMock
             ->expects($this->once())
             ->method('open')
