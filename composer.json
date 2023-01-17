@@ -15,10 +15,10 @@
         }
     ],
     "autoload": {
-        "psr-0": {"Liuggio": "src/"}
+        "psr-4": {"Liuggio\\": "src/Liuggio/"}
     },
     "autoload-dev": {
-      "psr-0": {"Liuggio": "tests/"}
+      "psr-4": {"Liuggio\\": "tests/Liuggio/"}
     },
     "require-dev": {
         "monolog/monolog": ">=1.2.0",
