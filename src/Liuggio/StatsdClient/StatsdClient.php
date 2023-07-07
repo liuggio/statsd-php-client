@@ -91,7 +91,7 @@ class StatsdClient implements StatsdClientInterface
     public function reduceCount($arrayData)
     {
         if (is_array($arrayData)) {
-            $arrayData = array_reduce($arrayData, "self::doReduce", array());
+            $arrayData = array_reduce($arrayData, array(self::class, "doReduce"), array());
         }
 
         return $arrayData;
